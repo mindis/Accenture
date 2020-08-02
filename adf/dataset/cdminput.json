@@ -1,0 +1,17 @@
+{
+	"name": "cdminput",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "waginput1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "cdm"
+			}
+		}
+	}
+}
