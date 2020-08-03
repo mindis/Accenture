@@ -38,6 +38,10 @@
 							{
 								"source": {
 									"path": "['EnqueuedTimeUtc']"
+								},
+								"sink": {
+									"name": "EventEnqueuedUtcTime",
+									"type": "DateTime"
 								}
 							},
 							{
@@ -48,6 +52,10 @@
 							{
 								"source": {
 									"path": "['SystemProperties']['connectionDeviceId']"
+								},
+								"sink": {
+									"name": "SerialNo",
+									"type": "String"
 								}
 							},
 							{
@@ -73,6 +81,11 @@
 							{
 								"source": {
 									"path": "['SystemProperties']['enqueuedTime']"
+								}
+							},
+							{
+								"source": {
+									"path": "['Body']"
 								}
 							}
 						],
