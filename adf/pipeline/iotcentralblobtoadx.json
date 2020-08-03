@@ -37,7 +37,7 @@
 						"mappings": [
 							{
 								"source": {
-									"path": "['EnqueuedTimeUtc']"
+									"path": "$['EnqueuedTimeUtc']"
 								},
 								"sink": {
 									"name": "EventEnqueuedUtcTime",
@@ -46,50 +46,15 @@
 							},
 							{
 								"source": {
-									"path": "['Properties']"
-								}
-							},
-							{
-								"source": {
-									"path": "['SystemProperties']['connectionDeviceId']"
+									"path": "$['SystemProperties']['connectionDeviceId']"
 								},
 								"sink": {
 									"name": "SerialNo",
 									"type": "String"
 								}
-							},
-							{
-								"source": {
-									"path": "['SystemProperties']['connectionAuthMethod']"
-								}
-							},
-							{
-								"source": {
-									"path": "['SystemProperties']['connectionDeviceGenerationId']"
-								}
-							},
-							{
-								"source": {
-									"path": "['SystemProperties']['contentType']"
-								}
-							},
-							{
-								"source": {
-									"path": "['SystemProperties']['interfaceName']"
-								}
-							},
-							{
-								"source": {
-									"path": "['SystemProperties']['enqueuedTime']"
-								}
-							},
-							{
-								"source": {
-									"path": "['Body']"
-								}
 							}
 						],
-						"collectionReference": "$",
+						"collectionReference": "",
 						"mapComplexValuesToString": false
 					}
 				},
