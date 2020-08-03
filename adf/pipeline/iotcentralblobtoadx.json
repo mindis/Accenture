@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "blobtoADX",
-				"type": "Copy",
+				"name": "dataflow1",
+				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -15,61 +15,15 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "JsonSource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"wildcardFolderPath": "*",
-							"wildcardFileName": "*.json",
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "JsonReadSettings"
-						}
+					"dataflow": {
+						"referenceName": "iotcentralblobtoADX",
+						"type": "DataFlowReference"
 					},
-					"sink": {
-						"type": "AzureDataExplorerSink"
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"path": "$['EnqueuedTimeUtc']"
-								},
-								"sink": {
-									"name": "EventEnqueuedUtcTime",
-									"type": "DateTime"
-								}
-							},
-							{
-								"source": {
-									"path": "$['SystemProperties']['connectionDeviceId']"
-								},
-								"sink": {
-									"name": "SerialNo",
-									"type": "String"
-								}
-							}
-						],
-						"collectionReference": "",
-						"mapComplexValuesToString": false
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
 					}
-				},
-				"inputs": [
-					{
-						"referenceName": "iotcentralblob",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "AzureDataExplorerTable1",
-						"type": "DatasetReference"
-					}
-				]
+				}
 			}
 		],
 		"annotations": []
