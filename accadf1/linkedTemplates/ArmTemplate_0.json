@@ -7,17 +7,41 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "accadf1"
 		},
+		"ADX1_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'ADX1'"
+		},
 		"accoutput_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'accoutput'"
+		},
+		"iotcentralblob1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'iotcentralblob1'"
 		},
 		"waginput1_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'waginput1'"
 		},
+		"ADX1_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"ADX1_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "da4ee700-880e-4026-b700-5d77491cdfb5"
+		},
+		"ADX1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "jemtsdb"
+		},
 		"accoutput_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://accbbstore.dfs.core.windows.net"
+		},
+		"iotcentralblob1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://iotcentralstore.dfs.core.windows.net"
 		},
 		"waginput1_properties_typeProperties_url": {
 			"type": "string",
@@ -28,6 +52,26 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ADX1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDataExplorer",
+				"typeProperties": {
+					"endpoint": "https://iiotstore.eastus2.kusto.windows.net",
+					"tenant": "[parameters('ADX1_properties_typeProperties_tenant')]",
+					"servicePrincipalId": "[parameters('ADX1_properties_typeProperties_servicePrincipalId')]",
+					"servicePrincipalKey": {
+						"type": "SecureString",
+						"value": "[parameters('ADX1_servicePrincipalKey')]"
+					},
+					"database": "[parameters('ADX1_properties_typeProperties_database')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/accoutput')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -40,6 +84,23 @@
 					"accountKey": {
 						"type": "SecureString",
 						"value": "[parameters('accoutput_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/iotcentralblob1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('iotcentralblob1_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('iotcentralblob1_accountKey')]"
 					}
 				}
 			},
@@ -61,6 +122,26 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataExplorerTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADX1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureDataExplorerTable",
+				"schema": [],
+				"typeProperties": {
+					"table": "iotcentraltelemetry"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADX1')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Binaryacc')]",
@@ -107,6 +188,28 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/cdmOutput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "accoutput",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "cdm"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/cdminput')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -129,25 +232,63 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/cdmOutput')]",
+			"name": "[concat(parameters('factoryName'), '/iotcentralblob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "accoutput",
+					"referenceName": "iotcentralblob1",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "Binary",
+				"type": "Json",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileSystem": "cdm"
+						"folderPath": "3a11d300-d923-4a3d-9cd9-75364b23f710/telemetry/2020",
+						"fileSystem": "telemetry"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"EnqueuedTimeUtc": {
+							"type": "string"
+						},
+						"Properties": {
+							"type": "object"
+						},
+						"SystemProperties": {
+							"type": "object",
+							"properties": {
+								"connectionDeviceId": {
+									"type": "string"
+								},
+								"connectionAuthMethod": {
+									"type": "string"
+								},
+								"connectionDeviceGenerationId": {
+									"type": "string"
+								},
+								"contentType": {
+									"type": "string"
+								},
+								"interfaceName": {
+									"type": "string"
+								},
+								"enqueuedTime": {
+									"type": "string"
+								}
+							}
+						},
+						"Body": {
+							"type": "string"
+						}
 					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
+				"[concat(variables('factoryId'), '/linkedServices/iotcentralblob1')]"
 			]
 		},
 		{
@@ -268,6 +409,91 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/cdminput')]",
 				"[concat(variables('factoryId'), '/datasets/cdmOutput')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/iotcentralblobtoadx')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "blobtoADX",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "*",
+									"wildcardFileName": "*.json",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureDataExplorerSink"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['EnqueuedTimeUtc']"
+										},
+										"sink": {
+											"name": "EventEnqueuedUtcTime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"path": "$['SystemProperties']['connectionDeviceId']"
+										},
+										"sink": {
+											"name": "SerialNo",
+											"type": "String"
+										}
+									}
+								],
+								"collectionReference": "",
+								"mapComplexValuesToString": false
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "iotcentralblob",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureDataExplorerTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/iotcentralblob')]",
+				"[concat(variables('factoryId'), '/datasets/AzureDataExplorerTable1')]"
 			]
 		}
 	]

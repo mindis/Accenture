@@ -7,17 +7,41 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "accadf1"
 		},
+		"ADX1_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'ADX1'"
+		},
 		"accoutput_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'accoutput'"
+		},
+		"iotcentralblob1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'iotcentralblob1'"
 		},
 		"waginput1_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'waginput1'"
 		},
+		"ADX1_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"ADX1_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "da4ee700-880e-4026-b700-5d77491cdfb5"
+		},
+		"ADX1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "jemtsdb"
+		},
 		"accoutput_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://accbbstore.dfs.core.windows.net"
+		},
+		"iotcentralblob1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://iotcentralstore.dfs.core.windows.net"
 		},
 		"waginput1_properties_typeProperties_url": {
 			"type": "string",
@@ -50,14 +74,32 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"ADX1_servicePrincipalKey": {
+						"value": "[parameters('ADX1_servicePrincipalKey')]"
+					},
 					"accoutput_accountKey": {
 						"value": "[parameters('accoutput_accountKey')]"
+					},
+					"iotcentralblob1_accountKey": {
+						"value": "[parameters('iotcentralblob1_accountKey')]"
 					},
 					"waginput1_accountKey": {
 						"value": "[parameters('waginput1_accountKey')]"
 					},
+					"ADX1_properties_typeProperties_tenant": {
+						"value": "[parameters('ADX1_properties_typeProperties_tenant')]"
+					},
+					"ADX1_properties_typeProperties_servicePrincipalId": {
+						"value": "[parameters('ADX1_properties_typeProperties_servicePrincipalId')]"
+					},
+					"ADX1_properties_typeProperties_database": {
+						"value": "[parameters('ADX1_properties_typeProperties_database')]"
+					},
 					"accoutput_properties_typeProperties_url": {
 						"value": "[parameters('accoutput_properties_typeProperties_url')]"
+					},
+					"iotcentralblob1_properties_typeProperties_url": {
+						"value": "[parameters('iotcentralblob1_properties_typeProperties_url')]"
 					},
 					"waginput1_properties_typeProperties_url": {
 						"value": "[parameters('waginput1_properties_typeProperties_url')]"

@@ -5,14 +5,32 @@
 		"factoryName": {
 			"value": "accadf1"
 		},
+		"ADX1_servicePrincipalKey": {
+			"value": ""
+		},
 		"accoutput_accountKey": {
+			"value": ""
+		},
+		"iotcentralblob1_accountKey": {
 			"value": ""
 		},
 		"waginput1_accountKey": {
 			"value": ""
 		},
+		"ADX1_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"ADX1_properties_typeProperties_servicePrincipalId": {
+			"value": "da4ee700-880e-4026-b700-5d77491cdfb5"
+		},
+		"ADX1_properties_typeProperties_database": {
+			"value": "jemtsdb"
+		},
 		"accoutput_properties_typeProperties_url": {
 			"value": "https://accbbstore.dfs.core.windows.net"
+		},
+		"iotcentralblob1_properties_typeProperties_url": {
+			"value": "https://iotcentralstore.dfs.core.windows.net"
 		},
 		"waginput1_properties_typeProperties_url": {
 			"value": "https://waginput.dfs.core.windows.net"
