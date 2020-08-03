@@ -1,0 +1,55 @@
+{
+	"name": "iotcentralblob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "iotcentralblob1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "3a11d300-d923-4a3d-9cd9-75364b23f710/telemetry/2020",
+				"fileSystem": "telemetry"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"EnqueuedTimeUtc": {
+					"type": "string"
+				},
+				"Properties": {
+					"type": "object"
+				},
+				"SystemProperties": {
+					"type": "object",
+					"properties": {
+						"connectionDeviceId": {
+							"type": "string"
+						},
+						"connectionAuthMethod": {
+							"type": "string"
+						},
+						"connectionDeviceGenerationId": {
+							"type": "string"
+						},
+						"contentType": {
+							"type": "string"
+						},
+						"interfaceName": {
+							"type": "string"
+						},
+						"enqueuedTime": {
+							"type": "string"
+						}
+					}
+				},
+				"Body": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
