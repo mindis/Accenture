@@ -1,0 +1,36 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "accadf1"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ADX1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDataExplorer",
+				"typeProperties": {
+					"endpoint": "https://iiotstore.eastus2.kusto.windows.net",
+					"tenant": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+					"servicePrincipalId": "da4ee700-880e-4026-b700-5d77491cdfb5",
+					"servicePrincipalKey": {
+						"type": "SecureString",
+						"value": "**********"
+					},
+					"database": "jemtsdb"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
