@@ -1,0 +1,15 @@
+{
+	"name": "ADX1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDataExplorer",
+		"typeProperties": {
+			"endpoint": "https://iiotstore.eastus2.kusto.windows.net",
+			"tenant": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+			"servicePrincipalId": "da4ee700-880e-4026-b700-5d77491cdfb5",
+			"database": "jemtsdb",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkFDQ0FERjFfYzNjOWExNGUtZTM2NC00NDJhLTgzMmQtNmMzOTgwYzMwMDA0Ig0KfQ=="
+		}
+	}
+}
