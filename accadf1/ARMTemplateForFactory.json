@@ -102,7 +102,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup1').output.value",
+								"value": "@activity('Lookup1').output",
 								"type": "Expression"
 							},
 							"activities": [
@@ -167,7 +167,7 @@
 									"typeProperties": {
 										"variableName": "connstr",
 										"value": {
-											"value": "@item()",
+											"value": "@string(item().value)",
 											"type": "Expression"
 										}
 									}
@@ -693,6 +693,43 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/sqloutputconn')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sqlb1input",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "connstr",
+						"type": "varchar"
+					},
+					{
+						"name": "inserttime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "tblconnstr1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sqlb1input')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ADX1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -856,43 +893,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/iotcentralblob')]",
 				"[concat(variables('factoryId'), '/datasets/Jsonoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sqloutputconn')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sqlb1input",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "id",
-						"type": "bigint",
-						"precision": 19
-					},
-					{
-						"name": "connstr",
-						"type": "varchar"
-					},
-					{
-						"name": "inserttime",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "tblconnstr1"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sqlb1input')]"
 			]
 		}
 	]
