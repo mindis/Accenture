@@ -41,7 +41,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup1').output",
+						"value": "@activity('Lookup1').output.value",
 						"type": "Expression"
 					},
 					"activities": [
@@ -103,7 +103,10 @@
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "connstr",
-								"value": "@item()"
+								"value": {
+									"value": "@item()",
+									"type": "Expression"
+								}
 							}
 						},
 						{
