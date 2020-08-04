@@ -29,7 +29,7 @@
 					"name": "DerivedColumn1"
 				}
 			],
-			"script": "parameters{\n\tcstr as string\n}\nsource(output(\n\t\tid as long,\n\t\tconnstr as string,\n\t\tinserttime as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source1\nDerivedColumn1 select(mapColumn(\n\t\tconnstr = tmpconstr\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsource1 derive(tmpconstr = $cstr) ~> DerivedColumn1\nSelect1 sink(input(\n\t\tid as long,\n\t\tconnstr as string,\n\t\tinserttime as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\tconnstr\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+			"script": "parameters{\n\tcstr as string\n}\nsource(output(\n\t\tid as long,\n\t\tconnstr as string,\n\t\tinserttime as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source1\nDerivedColumn1 select(mapColumn(\n\t\tconnstr = tmpconstr\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsource1 derive(tmpconstr = $cstr) ~> DerivedColumn1\nSelect1 sink(input(\n\t\tid as long,\n\t\tconnstr as string,\n\t\tinserttime as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
 		}
 	}
 }
