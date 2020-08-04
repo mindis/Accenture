@@ -128,7 +128,13 @@
 							"typeProperties": {
 								"dataflow": {
 									"referenceName": "fordataflow",
-									"type": "DataFlowReference"
+									"type": "DataFlowReference",
+									"parameters": {
+										"cstr": {
+											"value": "'@{variables('connstr')}'",
+											"type": "Expression"
+										}
+									}
 								},
 								"compute": {
 									"coreCount": 8,
