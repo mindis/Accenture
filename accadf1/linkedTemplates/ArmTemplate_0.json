@@ -319,6 +319,29 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Jsonoutput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "accoutput",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "iotdatadump"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/OpenDataSetCopy')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -457,7 +480,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "csvouput",
+								"referenceName": "Jsonoutput",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -471,12 +494,12 @@
 							"name": "Select1"
 						}
 					],
-					"script": "source(output(\n\t\tEnqueuedTimeUtc as string,\n\t\tProperties as ({} as string),\n\t\tSystemProperties as (connectionDeviceId as string, connectionAuthMethod as string, connectionDeviceGenerationId as string, contentType as string, interfaceName as string, enqueuedTime as string),\n\t\tBody as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\twildcardPaths:['3a11d300-d923-4a3d-9cd9-75364b23f710/telemetry/*/*/*/*/*']) ~> iotcentralblob\niotcentralblob derive(BodyString = fromBase64(Body)) ~> DerivedColumn1\nDerivedColumn1 select(mapColumn(\n\t\tEnqueuedTimeUtc,\n\t\tProperties = SystemProperties.connectionDeviceId,\n\t\tBody,\n\t\tBodyString\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\ttruncate: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+					"script": "source(output(\n\t\tEnqueuedTimeUtc as string,\n\t\tProperties as ({} as string),\n\t\tSystemProperties as (connectionDeviceId as string, connectionAuthMethod as string, connectionDeviceGenerationId as string, contentType as string, interfaceName as string, enqueuedTime as string),\n\t\tBody as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\twildcardPaths:['3a11d300-d923-4a3d-9cd9-75364b23f710/telemetry/*/*/*/*/*']) ~> iotcentralblob\niotcentralblob derive(BodyString = fromBase64(Body)) ~> DerivedColumn1\nDerivedColumn1 select(mapColumn(\n\t\tBodyString\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\ttruncate: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/iotcentralblob')]",
-				"[concat(variables('factoryId'), '/datasets/csvouput')]"
+				"[concat(variables('factoryId'), '/datasets/Jsonoutput')]"
 			]
 		},
 		{
