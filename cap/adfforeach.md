@@ -1,6 +1,8 @@
-# Aure Data Factory For Each 
+# Azure Data Factory For Each 
 
 ## Use Case
+
+To load data sql tables as parameter. Pass that parameters into Copy pipeline and also pass as parameters into data flow to use the value.
 
 ## Pre-requistie
 
@@ -69,6 +71,8 @@ ALTER TABLE [dbo].[tblconnstr1] ADD  DEFAULT (getdate()) FOR [inserttime]
 GO
 ```
 - Now time to create Azure data factory
+
+## Azure Data Factory Steps
 
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach1.jpg "For Each")
 
