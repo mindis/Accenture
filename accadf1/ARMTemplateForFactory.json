@@ -179,8 +179,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "blobtoADX",
-						"type": "Copy",
+						"name": "dataflow1",
+						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -191,70 +191,27 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"source": {
-								"type": "JsonSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFolderPath": "*",
-									"wildcardFileName": "*.json",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "JsonReadSettings"
+							"dataflow": {
+								"referenceName": "iotcentralblobtoADX",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"iotcentralblob": {},
+									"sink1": {}
 								}
 							},
-							"sink": {
-								"type": "AzureDataExplorerSink"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['EnqueuedTimeUtc']"
-										},
-										"sink": {
-											"name": "EventEnqueuedUtcTime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"path": "$['SystemProperties']['connectionDeviceId']"
-										},
-										"sink": {
-											"name": "SerialNo",
-											"type": "String"
-										}
-									}
-								],
-								"collectionReference": "",
-								"mapComplexValuesToString": false
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
 							}
-						},
-						"inputs": [
-							{
-								"referenceName": "iotcentralblob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureDataExplorerTable1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+						}
 					}
 				],
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/iotcentralblob')]",
-				"[concat(variables('factoryId'), '/datasets/AzureDataExplorerTable1')]"
+				"[concat(variables('factoryId'), '/dataflows/iotcentralblobtoADX')]"
 			]
 		},
 		{
@@ -495,6 +452,74 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/iotcentralblobtoADX')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "iotcentralblob",
+								"type": "DatasetReference"
+							},
+							"name": "iotcentralblob"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "csvouput",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "DerivedColumn1"
+						},
+						{
+							"name": "Select1"
+						}
+					],
+					"script": "source(output(\n\t\tEnqueuedTimeUtc as string,\n\t\tProperties as ({} as string),\n\t\tSystemProperties as (connectionDeviceId as string, connectionAuthMethod as string, connectionDeviceGenerationId as string, contentType as string, interfaceName as string, enqueuedTime as string),\n\t\tBody as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\twildcardPaths:['3a11d300-d923-4a3d-9cd9-75364b23f710/telemetry/*/*/*/*/*']) ~> iotcentralblob\niotcentralblob derive(BodyString = fromBase64(Body)) ~> DerivedColumn1\nDerivedColumn1 select(mapColumn(\n\t\tEnqueuedTimeUtc,\n\t\tProperties = SystemProperties.connectionDeviceId,\n\t\tBody,\n\t\tBodyString\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\ttruncate: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/iotcentralblob')]",
+				"[concat(variables('factoryId'), '/datasets/csvouput')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csvouput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "accoutput",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "iotdatadump"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
+			]
 		}
 	]
 }
