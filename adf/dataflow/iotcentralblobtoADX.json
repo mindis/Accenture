@@ -26,7 +26,7 @@
 					"name": "DerivedColumn1"
 				}
 			],
-			"script": "source(output(\n\t\tEnqueuedTimeUtc as string,\n\t\tProperties as ({} as string),\n\t\tSystemProperties as (connectionDeviceId as string, connectionAuthMethod as string, connectionDeviceGenerationId as string, contentType as string, interfaceName as string, enqueuedTime as string),\n\t\tBody as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\twildcardPaths:['3a11d300-d923-4a3d-9cd9-75364b23f710/telemetry/*/*/*/*/*']) ~> iotcentralblob\niotcentralblob derive(BodyString = fromBase64(Body)) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+			"script": "source(output(\n\t\tEnqueuedTimeUtc as string,\n\t\tProperties as ({} as string),\n\t\tSystemProperties as (connectionDeviceId as string, connectionAuthMethod as string, connectionDeviceGenerationId as string, contentType as string, interfaceName as string, enqueuedTime as string),\n\t\tBody as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\twildcardPaths:['3a11d300-d923-4a3d-9cd9-75364b23f710/telemetry/*/*/*/*/*']) ~> iotcentralblob\niotcentralblob derive(BodyString = fromBase64(Body)) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\ttruncate: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
 		}
 	}
 }
