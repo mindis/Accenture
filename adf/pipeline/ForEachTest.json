@@ -48,7 +48,14 @@
 						{
 							"name": "Copy data1",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Set variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -88,11 +95,26 @@
 									"type": "DatasetReference"
 								}
 							]
+						},
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "connstr",
+								"value": "@item()"
+							}
 						}
 					]
 				}
 			}
 		],
+		"variables": {
+			"connstr": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }
