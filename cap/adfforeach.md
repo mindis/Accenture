@@ -4,7 +4,7 @@
 
 To load data sql tables as parameter. Pass that parameters into Copy pipeline and also pass as parameters into data flow to use the value.
 
-## Pre-requistie
+## Pre·requisite
 
 - Azure SQL database
 - Create table tblconnstr
