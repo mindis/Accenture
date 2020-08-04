@@ -19,13 +19,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'iotcentralblob1'"
 		},
-		"waginput1_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'waginput1'"
-		},
 		"sqlb1input_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sqlb1input'"
+		},
+		"waginput1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'waginput1'"
 		},
 		"ADX1_properties_typeProperties_tenant": {
 			"type": "string",
@@ -111,6 +111,19 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/sqlb1input')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('sqlb1input_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/waginput1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -123,19 +136,6 @@
 						"type": "SecureString",
 						"value": "[parameters('waginput1_accountKey')]"
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sqlb1input')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('sqlb1input_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -205,6 +205,73 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Jsonoutput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "accoutput",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "iotdatadump"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adfinput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "accoutput",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "adfinput"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adfoutput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "accoutput",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "adfoutput"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/cdmOutput')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -246,6 +313,70 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/waginput1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/connstrinput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sqlb1input",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "connstr",
+						"type": "varchar"
+					},
+					{
+						"name": "inserttime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "tblconnstr"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sqlb1input')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csvouput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "accoutput",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "iotdatadump"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
 			]
 		},
 		{
@@ -309,57 +440,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/csvouput')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accoutput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "iotdatadump"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Jsonoutput')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accoutput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "iotdatadump"
-					}
-				},
-				"schema": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/connstrinput')]",
+			"name": "[concat(parameters('factoryName'), '/sqloutputconn')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -388,55 +469,11 @@
 				],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "tblconnstr"
+					"table": "tblconnstr1"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/sqlb1input')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/adfinput')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accoutput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "adfinput"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/adfoutput')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accoutput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "adfoutput"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
 			]
 		},
 		{
@@ -560,7 +597,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/iotcentralblobtoADX')]",
+			"name": "[concat(parameters('factoryName'), '/fordataflow')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -569,16 +606,16 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "iotcentralblob",
+								"referenceName": "connstrinput",
 								"type": "DatasetReference"
 							},
-							"name": "iotcentralblob"
+							"name": "source1"
 						}
 					],
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Jsonoutput",
+								"referenceName": "sqloutputconn",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -586,148 +623,18 @@
 					],
 					"transformations": [
 						{
-							"name": "DerivedColumn1"
+							"name": "Select1"
 						},
 						{
-							"name": "Select1"
+							"name": "DerivedColumn1"
 						}
 					],
-					"script": "source(output(\n\t\tEnqueuedTimeUtc as string,\n\t\tProperties as ({} as string),\n\t\tSystemProperties as (connectionDeviceId as string, connectionAuthMethod as string, connectionDeviceGenerationId as string, contentType as string, interfaceName as string, enqueuedTime as string),\n\t\tBody as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\twildcardPaths:['3a11d300-d923-4a3d-9cd9-75364b23f710/telemetry/*/*/*/*/*']) ~> iotcentralblob\niotcentralblob derive(BodyString = fromBase64(Body)) ~> DerivedColumn1\nDerivedColumn1 select(mapColumn(\n\t\tBodyString\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\ttruncate: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+					"script": "parameters{\n\tcstr as string\n}\nsource(output(\n\t\tid as long,\n\t\tconnstr as string,\n\t\tinserttime as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source1\nDerivedColumn1 select(mapColumn(\n\t\tconnstr = tmpconstr\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsource1 derive(tmpconstr = $cstr) ~> DerivedColumn1\nSelect1 sink(input(\n\t\tid as long,\n\t\tconnstr as string,\n\t\tinserttime as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\tconnstr\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/iotcentralblob')]",
-				"[concat(variables('factoryId'), '/datasets/Jsonoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ForEachTest')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "select connstr from tblconnstr;",
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "connstrinput",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup1').output",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy data1",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "Set variable1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "BinarySource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": true
-											},
-											"formatSettings": {
-												"type": "BinaryReadSettings"
-											}
-										},
-										"sink": {
-											"type": "BinarySink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											}
-										},
-										"enableStaging": false
-									},
-									"inputs": [
-										{
-											"referenceName": "adfinput",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "adfoutput",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
-								},
-								{
-									"name": "Set variable1",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "connstr",
-										"value": "@item()"
-									}
-								}
-							]
-						}
-					}
-				],
-				"variables": {
-					"connstr": {
-						"type": "String"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/connstrinput')]",
-				"[concat(variables('factoryId'), '/datasets/adfinput')]",
-				"[concat(variables('factoryId'), '/datasets/adfoutput')]"
+				"[concat(variables('factoryId'), '/datasets/sqloutputconn')]"
 			]
 		}
 	]

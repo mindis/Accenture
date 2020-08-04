@@ -14,10 +14,10 @@
 		"iotcentralblob1_accountKey": {
 			"value": ""
 		},
-		"waginput1_accountKey": {
+		"sqlb1input_connectionString": {
 			"value": ""
 		},
-		"sqlb1input_connectionString": {
+		"waginput1_accountKey": {
 			"value": ""
 		},
 		"ADX1_properties_typeProperties_tenant": {

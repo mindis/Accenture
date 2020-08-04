@@ -13,44 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/iotcentralblobtoADX')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "iotcentralblob",
-								"type": "DatasetReference"
-							},
-							"name": "iotcentralblob"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "Jsonoutput",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "DerivedColumn1"
-						},
-						{
-							"name": "Select1"
-						}
-					],
-					"script": "source(output(\n\t\tEnqueuedTimeUtc as string,\n\t\tProperties as ({} as string),\n\t\tSystemProperties as (connectionDeviceId as string, connectionAuthMethod as string, connectionDeviceGenerationId as string, contentType as string, interfaceName as string, enqueuedTime as string),\n\t\tBody as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\twildcardPaths:['3a11d300-d923-4a3d-9cd9-75364b23f710/telemetry/*/*/*/*/*']) ~> iotcentralblob\niotcentralblob derive(BodyString = fromBase64(Body)) ~> DerivedColumn1\nDerivedColumn1 select(mapColumn(\n\t\tBodyString\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\ttruncate: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ForEachTest')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -76,8 +38,7 @@
 							},
 							"dataset": {
 								"referenceName": "connstrinput",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							},
 							"firstRowOnly": false
 						}
@@ -141,15 +102,13 @@
 									"inputs": [
 										{
 											"referenceName": "adfinput",
-											"type": "DatasetReference",
-											"parameters": {}
+											"type": "DatasetReference"
 										}
 									],
 									"outputs": [
 										{
 											"referenceName": "adfoutput",
-											"type": "DatasetReference",
-											"parameters": {}
+											"type": "DatasetReference"
 										}
 									]
 								},
@@ -194,13 +153,8 @@
 													"value": "'@{variables('connstr')}'",
 													"type": "Expression"
 												}
-											},
-											"datasetParameters": {
-												"source1": {},
-												"sink1": {}
 											}
 										},
-										"staging": {},
 										"compute": {
 											"coreCount": 8,
 											"computeType": "General"
@@ -218,49 +172,84 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/fordataflow')]"
+			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/iotcentralblobtoadx')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/fordataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "dataflow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "iotcentralblobtoADX",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"iotcentralblob": {},
-									"sink1": {}
-								}
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "connstrinput",
+								"type": "DatasetReference"
 							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							}
+							"name": "source1"
 						}
-					}
-				],
-				"annotations": []
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "sqloutputconn",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Select1"
+						},
+						{
+							"name": "DerivedColumn1"
+						}
+					],
+					"script": "parameters{\n\tcstr as string\n}\nsource(output(\n\t\tid as long,\n\t\tconnstr as string,\n\t\tinserttime as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source1\nDerivedColumn1 select(mapColumn(\n\t\tconnstr = tmpconstr\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsource1 derive(tmpconstr = $cstr) ~> DerivedColumn1\nSelect1 sink(input(\n\t\tid as long,\n\t\tconnstr as string,\n\t\tinserttime as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\tconnstr\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/iotcentralblobtoADX')]"
+				"[concat(variables('factoryId'), '/datasets/sqloutputconn')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sqloutputconn')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sqlb1input",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "connstr",
+						"type": "varchar"
+					},
+					{
+						"name": "inserttime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "tblconnstr1"
+				}
+			},
+			"dependsOn": []
 		}
 	]
 }
