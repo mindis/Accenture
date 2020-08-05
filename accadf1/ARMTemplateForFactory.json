@@ -923,7 +923,7 @@
 								"type": "DataFlowReference",
 								"parameters": {
 									"param1": {
-										"value": "'@{\"123\"}'",
+										"value": "'@{\"3\"}'",
 										"type": "Expression"
 									}
 								},
