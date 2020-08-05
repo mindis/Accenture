@@ -8,6 +8,9 @@
 		"ADX1_servicePrincipalKey": {
 			"value": ""
 		},
+		"accdeltaoutput_connectionString": {
+			"value": ""
+		},
 		"accoutput_accountKey": {
 			"value": ""
 		},
@@ -18,9 +21,6 @@
 			"value": ""
 		},
 		"waginput1_accountKey": {
-			"value": ""
-		},
-		"accdeltaoutput_connectionString": {
 			"value": ""
 		},
 		"ADX1_properties_typeProperties_tenant": {
