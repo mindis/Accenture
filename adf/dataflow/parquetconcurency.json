@@ -1,0 +1,35 @@
+{
+	"name": "parquetconcurency",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Parquet1incoming",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "accdeltaoutput",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Select1"
+				},
+				{
+					"name": "AlterRow1"
+				}
+			],
+			"script": "parameters{\n\tparam1 as string\n}\nsource(output(\n\t\tasset as string,\n\t\tasset_tag as string,\n\t\tassigned as string,\n\t\tassigned_to as string,\n\t\tassignment_group as string,\n\t\tattributes as string,\n\t\tcan_print as string,\n\t\tcategory as string,\n\t\tcd_rom as string,\n\t\tcd_speed as string,\n\t\tchange_control as string,\n\t\tchassis_type as string,\n\t\tchecked_in as string,\n\t\tchecked_out as string,\n\t\tclassification as string,\n\t\tcomments as string,\n\t\tcompany as string,\n\t\tcorrelation_id as string,\n\t\tcost as string,\n\t\tcost_cc as string,\n\t\tcost_center as string,\n\t\tcpu_core_count as string,\n\t\tcpu_core_thread as string,\n\t\tcpu_count as string,\n\t\tcpu_manufacturer as string,\n\t\tcpu_name as string,\n\t\tcpu_speed as string,\n\t\tcpu_type as string,\n\t\tdefault_gateway as string,\n\t\tdelivery_date as string,\n\t\tdepartment as string,\n\t\tdiscovery_source as string,\n\t\tdisk_space as string,\n\t\tdns_domain as string,\n\t\tdr_backup as string,\n\t\tdue as string,\n\t\tdue_in as string,\n\t\tfault_count as string,\n\t\tfirewall_status as string,\n\t\tfirst_discovered as string,\n\t\tfloppy as string,\n\t\tform_factor as string,\n\t\tfqdn as string,\n\t\tgl_account as string,\n\t\thardware_status as string,\n\t\thardware_substatus as string,\n\t\thost_name as string,\n\t\tinstall_date as string,\n\t\tinstall_status as string,\n\t\tinvoice_number as string,\n\t\tip_address as string,\n\t\tjustification as string,\n\t\tlast_discovered as string,\n\t\tlease_id as string,\n\t\tlocation as string,\n\t\tmac_address as string,\n\t\tmaintenance_schedule as string,\n\t\tmanaged_domain as string,\n\t\tmanufacturer as string,\n\t\tmodel_id as string,\n\t\tmodel_number as string,\n\t\tname as string,\n\t\tobject_id as string,\n\t\toperational_status as string,\n\t\torder_date as string,\n\t\tos as string,\n\t\tos_address_width as string,\n\t\tos_domain as string,\n\t\tos_service_pack as string,\n\t\tos_version as string,\n\t\towned_by as string,\n\t\tpo_number as string,\n\t\tprocessor_name as string,\n\t\tpurchase_date as string,\n\t\tram as string,\n\t\tschedule as string,\n\t\tserial_number as string,\n\t\tshort_description as string,\n\t\tskip_sync as string,\n\t\tstart_date as string,\n\t\tsubcategory as string,\n\t\tsupport_group as string,\n\t\tsupported_by as string,\n\t\tsys_class_name as string,\n\t\tsys_class_path as string,\n\t\tsys_created_by as string,\n\t\tsys_created_on as string,\n\t\tsys_domain as string,\n\t\tsys_domain_path as string,\n\t\tsys_id as string,\n\t\tsys_mod_count as string,\n\t\tsys_updated_by as string,\n\t\tsys_updated_on as string,\n\t\tu_additional_attributes as string,\n\t\tu_application_id as string,\n\t\tu_asset_id as string,\n\t\tu_asset_owner as string,\n\t\tu_business_approver_groups as string,\n\t\tu_business_approvers as string,\n\t\tu_cab_approver_groups as string,\n\t\tu_cab_approvers as string,\n\t\tu_category as string,\n\t\tu_ci_manager as string,\n\t\tu_corporate_structure as string,\n\t\tu_corporatestructure1 as string,\n\t\tu_delivery_date as string,\n\t\tu_device_type as string,\n\t\tu_hardware_operating_system as string,\n\t\tu_hardware_os_version as string,\n\t\tu_managed_by_group as string,\n\t\tu_rack as string,\n\t\tu_refresh_due_date as string,\n\t\tu_room as string,\n\t\tu_site_support_team as string,\n\t\tu_start_tool_last_modified_by as string,\n\t\tu_start_tool_last_modified_date as string,\n\t\tu_support_model as string,\n\t\tu_support_model_management as string,\n\t\tu_technical_approver_groups as string,\n\t\tu_technical_approvers as string,\n\t\tunverified as string,\n\t\tused_for as string,\n\t\tvendor as string,\n\t\tvirtual as string,\n\t\twarranty_expiration as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> source1\nsource1 select(mapColumn(\n\t\teach(match(/* All input columns */ true()),\n\t\t\t/* Input name */ $$ = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 alterRow(updateIf(equals(sys_id,$param1))) ~> AlterRow1\nAlterRow1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delta',\n\tcontainer: 'parquetoutput',\n\ttruncate: false,\n\tvacuum: 0,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+		}
+	}
+}

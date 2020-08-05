@@ -1,0 +1,19 @@
+{
+	"name": "Parquet1output",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "accoutput",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "parquetoutput"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
