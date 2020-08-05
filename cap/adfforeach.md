@@ -2,7 +2,8 @@
 
 ## Use Case
 
-To load data sql tables as parameter. Pass that parameters into Copy pipeline and also pass as parameters into data flow to use the value.
+To load data sql tables as parameter. Pass that parameters into Copy pipeline and also pass as parameters into data flow to use the value. The idea here is table will have source and destination connection string and use a pipeline to reuse by changing connection 
+string instead of having multiple pipeline in Azure data factory. The pipelines will align with data sources like Azure sql as source and azure sql as sink will in one common. Azure sql to blob might be another, like that.
 
 ## Pre·requisite
 
@@ -74,30 +75,80 @@ GO
 
 ## Azure Data Factory Steps
 
+- Create a New pipeline
+- Drag Lookup activity
+- Drag ForEach activity and connect them both.
+
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach1.jpg "For Each")
+
+- For Lookup connect the Azure SQL Database with table tblconnstr. And in the query field 
+
+```
+select connstr from tblconnstr;
+```
+
+- Select query
 
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach2.jpg "For Each")
 
+- Now lets configure the items section for ForEach activity
+- the goal is get it to array so that inside ForEach we can reference and use them
+
+```
+@array(activity('Lookup1').output)
+```
+
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach3.jpg "For Each")
+
+- Now inside ForEach
+- Add Set Variable to save each row value 
+
+```
+@string(item().value)
+```
+
+- Now Drag Copy activity and configure just blob container to blob container for testing
 
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach4.jpg "For Each")
 
+- Add blob container as input called adfinput
+
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach5.jpg "For Each")
+
+- Add blob container as output called adfoutput
 
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach6.jpg "For Each")
 
+- Now COnfigure the data flow activity
+- we need to add a parameter
+- Create Pipeline parameter
+
+```
+@variables('connstr')
+```
+
+- Create a data flow pipeline.
+
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach7.jpg "For Each")
+
+- Connect to sql source as input
 
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach8.jpg "For Each")
 
-![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach9.jpg "For Each")
+- Create a temporary variable for data flow as cstr
 
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach10.jpg "For Each")
 
-![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach11.jpg "For Each")
+- Create a derived column
+- assign tmp variable
 
-![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach12.jpg "For Each")
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach9.jpg "For Each")
+
+- Assign mappings and select the temp variable to connstr as output column
 
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach13.jpg "For Each")
+
+- Write the connstr column and mapp to output table tblconnstr1
+- Sink as output Azure SQL database
 
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/foreach14.jpg "For Each")
