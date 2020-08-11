@@ -17,4 +17,8 @@ val df = spark.read.json("/databricks-datasets/samples/people/people.json")
 
 # COMMAND ----------
 
-df_green = spark.read.format("csv").option("header", "true").load("tmp/taxi-csv/green_tripdata_*.csv")
+df_green = spark.read.format("csv").option("header", "true").load("/tmp/taxi-csv/fhv_tripdata_*.csv")
+
+# COMMAND ----------
+
+display(df_green)
