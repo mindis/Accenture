@@ -256,11 +256,11 @@ from azureml.core.webservice import AciWebservice, Webservice
 # Azure Subscription ID
 subscription_id = 'c46a9435-c957-4e6c-a0f4-b9a597984773'
 # Azure Machine Learning resource group NOT the managed resource group
-resource_group = 'mlops' 
+resource_group = 'accenture' 
 # Azure Machine Learning workspace name, NOT Azure Databricks workspace
-workspace_name = 'mlopsdev'  
+workspace_name = 'accml'  
 # Azure ML workspace location 
-location = "centralus"
+location = "eastus2"
 
 # Load or create an Azure ML Workspace
 azure_workspace = Workspace.create(name=workspace_name,
