@@ -97,7 +97,19 @@ display(
 # MAGIC )
 # MAGIC LOCATION 'wasbs://publicdata@mcg1stanstor00.blob.core.windows.net/countryCodes';
 # MAGIC 
+# MAGIC DROP TABLE IF EXISTS mcCountryCodes;
+# MAGIC CREATE TABLE IF NOT EXISTS mcCountryCodes (
+# MAGIC   countryCode INT
+# MAGIC   ,country STRING
+# MAGIC )
+# MAGIC USING CSV
+# MAGIC OPTIONS(
+# MAGIC   `header` 'true'
+# MAGIC )
+# MAGIC LOCATION 'wasbs://publicdata@mcg1stanstor00.blob.core.windows.net/countryCodes';
+# MAGIC 
 # MAGIC SELECT * FROM mcCountryCodes
+# MAGIC --SELECT * FROM cdrCountryCodes
 
 # COMMAND ----------
 
@@ -228,6 +240,11 @@ display(
 # COMMAND ----------
 
 # MAGIC %sql
+# MAGIC DESCRIBE CDRDeltaGold
+
+# COMMAND ----------
+
+# MAGIC %sql
 # MAGIC DESCRIBE HISTORY CDRDeltaGold
 
 # COMMAND ----------
@@ -243,25 +260,82 @@ display(
 
 # COMMAND ----------
 
+drop table CDRGoldAgg
+
+Create table CDRGoldAgg
+(
+     country varchar(100)
+    ,datetime datetime
+    ,day int
+    ,hour int
+    ,smsin decimal(18,6)
+    ,smsout decimal(18,6)
+    ,callin decimal(18,6)
+    ,callout decimal(18,6)
+    ,internet decimal(18,6)
+)
+
+select * from CDRGoldAgg;
+
+drop master key
+
+create master key encryption by password = 'MyTest!Mast3rP4ss';
+
+--verify by open/close.
+open master key decryption by password = 'MyTest!Mast3rP4ss';
+close master key;
+
+# COMMAND ----------
+
 # DBTITLE 1,Fill below with your Synapse SQL Pool / Blob connection info
 # MAGIC %sql 
 # MAGIC -- Set up the Blob storage account access key in the notebook session conf.
-# MAGIC SET fs.azure.account.key.<your-storage-account-name>.blob.core.windows.net=<your-storage-account-access-key>;
+# MAGIC SET fs.azure.account.key.accbbstore.blob.core.windows.net=iRfUM9DFyQKhE9BXbPOlfQIgjuz3GTQ7p0i8Y23Sxwa9CRchLHTPOPQqGrpCd6eQaQ141vc5PBqdrImOwvgXqA==;
+# MAGIC 
+# MAGIC DROP TABLE IF EXISTS SynCDRGold;
 # MAGIC 
 # MAGIC -- Read data using SQL.
 # MAGIC CREATE TABLE SynCDRGold
 # MAGIC USING com.databricks.spark.sqldw
 # MAGIC OPTIONS (
-# MAGIC   url 'jdbc:sqlserver://<the-rest-of-the-connection-string>',
+# MAGIC   url 'jdbc:sqlserver://accsqlpoolssvr.database.windows.net:1433;database=accsqlpools;user=sqladmin@accsqlpoolssvr;password=Azure!2345678;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;',
 # MAGIC   forwardSparkAzureStorageCredentials 'true',
 # MAGIC   dbTable 'CDRGoldAgg',
-# MAGIC   tempDir 'wasbs://<your-container-name>@<your-storage-account-name>.blob.core.windows.net/<your-directory-name>'
+# MAGIC   tempDir 'wasbs://stage@accbbstore.blob.core.windows.net/daily'
 # MAGIC );
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SET fs.azure.account.key.YOUR_BLOG.blob.core.windows.net=##STORAGE ACCNT KEY##;
+# MAGIC SELECT * FROM SynCDRGold
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC DESCRIBE SynCDRGold
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC 
+# MAGIC SET fs.azure.account.key.accbbstore.blob.core.windows.net=iRfUM9DFyQKhE9BXbPOlfQIgjuz3GTQ7p0i8Y23Sxwa9CRchLHTPOPQqGrpCd6eQaQ141vc5PBqdrImOwvgXqA==;
+# MAGIC 
+# MAGIC DROP TABLE IF EXISTS SynCDRGold;
+# MAGIC 
+# MAGIC CREATE TABLE SynCDRGold
+# MAGIC USING com.databricks.spark.sqldw
+# MAGIC OPTIONS (
+# MAGIC     url 'jdbc:sqlserver://accsqlpoolssvr.database.windows.net:1433;database=accsqlpools;user=sqladmin@accsqlpoolssvr;password=Azure!2345678;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;',
+# MAGIC   forwardSparkAzureStorageCredentials 'true',
+# MAGIC   dbTable 'CDRGoldAgg',
+# MAGIC   tempDir 'wasbs://stage@accbbstore.blob.core.windows.net/daily'
+# MAGIC )
+# MAGIC AS SELECT * FROM CDRDeltaGold;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC SET fs.azure.account.key.accbbstore.blob.core.windows.net=iRfUM9DFyQKhE9BXbPOlfQIgjuz3GTQ7p0i8Y23Sxwa9CRchLHTPOPQqGrpCd6eQaQ141vc5PBqdrImOwvgXqA==;
 # MAGIC 
 # MAGIC INSERT OVERWRITE TABLE SynCDRGold
 # MAGIC SELECT * 
