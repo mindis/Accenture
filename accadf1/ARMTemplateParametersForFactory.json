@@ -8,6 +8,9 @@
 		"ADX1_servicePrincipalKey": {
 			"value": ""
 		},
+		"accadlsinput_accountKey": {
+			"value": ""
+		},
 		"accdeltaoutput_connectionString": {
 			"value": ""
 		},
@@ -23,9 +26,6 @@
 		"waginput1_accountKey": {
 			"value": ""
 		},
-		"accadlsinput_accountKey": {
-			"value": ""
-		},
 		"ADX1_properties_typeProperties_tenant": {
 			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
 		},
@@ -35,6 +35,9 @@
 		"ADX1_properties_typeProperties_database": {
 			"value": "jemtsdb"
 		},
+		"accadlsinput_properties_typeProperties_url": {
+			"value": "https://accbbstore.dfs.core.windows.net"
+		},
 		"accoutput_properties_typeProperties_url": {
 			"value": "https://accbbstore.dfs.core.windows.net"
 		},
@@ -43,9 +46,6 @@
 		},
 		"waginput1_properties_typeProperties_url": {
 			"value": "https://waginput.dfs.core.windows.net"
-		},
-		"accadlsinput_properties_typeProperties_url": {
-			"value": "https://accbbstore.dfs.core.windows.net"
 		}
 	}
 }

@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'servicePrincipalKey' of 'ADX1'"
 		},
+		"accadlsinput_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'accadlsinput'"
+		},
 		"accdeltaoutput_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'accdeltaoutput'"
@@ -31,10 +35,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'waginput1'"
 		},
-		"accadlsinput_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'accadlsinput'"
-		},
 		"ADX1_properties_typeProperties_tenant": {
 			"type": "string",
 			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
@@ -47,6 +47,10 @@
 			"type": "string",
 			"defaultValue": "jemtsdb"
 		},
+		"accadlsinput_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://accbbstore.dfs.core.windows.net"
+		},
 		"accoutput_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://accbbstore.dfs.core.windows.net"
@@ -58,10 +62,6 @@
 		"waginput1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://waginput.dfs.core.windows.net"
-		},
-		"accadlsinput_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://accbbstore.dfs.core.windows.net"
 		},
 		"containerUri": {
 			"type": "string",
@@ -93,6 +93,9 @@
 					"ADX1_servicePrincipalKey": {
 						"value": "[parameters('ADX1_servicePrincipalKey')]"
 					},
+					"accadlsinput_accountKey": {
+						"value": "[parameters('accadlsinput_accountKey')]"
+					},
 					"accdeltaoutput_connectionString": {
 						"value": "[parameters('accdeltaoutput_connectionString')]"
 					},
@@ -108,9 +111,6 @@
 					"waginput1_accountKey": {
 						"value": "[parameters('waginput1_accountKey')]"
 					},
-					"accadlsinput_accountKey": {
-						"value": "[parameters('accadlsinput_accountKey')]"
-					},
 					"ADX1_properties_typeProperties_tenant": {
 						"value": "[parameters('ADX1_properties_typeProperties_tenant')]"
 					},
@@ -120,6 +120,9 @@
 					"ADX1_properties_typeProperties_database": {
 						"value": "[parameters('ADX1_properties_typeProperties_database')]"
 					},
+					"accadlsinput_properties_typeProperties_url": {
+						"value": "[parameters('accadlsinput_properties_typeProperties_url')]"
+					},
 					"accoutput_properties_typeProperties_url": {
 						"value": "[parameters('accoutput_properties_typeProperties_url')]"
 					},
@@ -128,9 +131,6 @@
 					},
 					"waginput1_properties_typeProperties_url": {
 						"value": "[parameters('waginput1_properties_typeProperties_url')]"
-					},
-					"accadlsinput_properties_typeProperties_url": {
-						"value": "[parameters('accadlsinput_properties_typeProperties_url')]"
 					}
 				}
 			},

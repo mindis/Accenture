@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'servicePrincipalKey' of 'ADX1'"
 		},
+		"accadlsinput_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'accadlsinput'"
+		},
 		"accdeltaoutput_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'accdeltaoutput'"
@@ -31,10 +35,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'waginput1'"
 		},
-		"accadlsinput_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'accadlsinput'"
-		},
 		"ADX1_properties_typeProperties_tenant": {
 			"type": "string",
 			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
@@ -47,6 +47,10 @@
 			"type": "string",
 			"defaultValue": "jemtsdb"
 		},
+		"accadlsinput_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://accbbstore.dfs.core.windows.net"
+		},
 		"accoutput_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://accbbstore.dfs.core.windows.net"
@@ -58,10 +62,6 @@
 		"waginput1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://waginput.dfs.core.windows.net"
-		},
-		"accadlsinput_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://accbbstore.dfs.core.windows.net"
 		}
 	},
 	"variables": {
@@ -84,6 +84,23 @@
 						"value": "[parameters('ADX1_servicePrincipalKey')]"
 					},
 					"database": "[parameters('ADX1_properties_typeProperties_database')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/accadlsinput')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('accadlsinput_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('accadlsinput_accountKey')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -160,23 +177,6 @@
 					"accountKey": {
 						"type": "SecureString",
 						"value": "[parameters('waginput1_accountKey')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/accadlsinput')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('accadlsinput_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('accadlsinput_accountKey')]"
 					}
 				}
 			},
@@ -841,6 +841,381 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/adfinputjson')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "accadlsinput",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "13456-2020.03.23.2-Sample2.json",
+						"fileSystem": "adfinput"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"AirID": {
+							"type": "integer"
+						},
+						"ComponentName": {
+							"type": "string"
+						},
+						"Version": {
+							"type": "string"
+						},
+						"Environment": {
+							"type": "array"
+						},
+						"Endpoints": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"Platform": {
+							"type": "string"
+						},
+						"Dependencies": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"version": {
+										"type": "string"
+									},
+									"type": {
+										"type": "string"
+									},
+									"sourceType": {
+										"type": "string"
+									},
+									"source": {
+										"type": "string"
+									},
+									"collectionSource": {
+										"type": "string"
+									},
+									"meta": {
+										"type": "object"
+									},
+									"custom": {
+										"type": "object",
+										"properties": {
+											"Name": {
+												"type": "string"
+											},
+											"Endpoints": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												}
+											},
+											"InUse[Yes/No]": {
+												"type": "boolean"
+											}
+										}
+									}
+								}
+							}
+						},
+						"BuilderMeta": {
+							"type": "object",
+							"properties": {
+								"MetadataBuilder": {
+									"type": "object",
+									"properties": {
+										"version": {
+											"type": "string"
+										},
+										"updated": {
+											"type": "string"
+										}
+									}
+								},
+								"DateTime": {
+									"type": "string"
+								},
+								"VSTS": {
+									"type": "object",
+									"properties": {
+										"Build": {
+											"type": "object",
+											"properties": {
+												"BUILD_REPOSITORY_URI": {
+													"type": "string"
+												},
+												"BUILD_SOURCEBRANCHNAME": {
+													"type": "string"
+												},
+												"BUILD_ARTIFACTSTAGINGDIRECTORY": {
+													"type": "string"
+												},
+												"BUILD_BUILDID": {
+													"type": "string"
+												},
+												"BUILD_BUILDNUMBER": {
+													"type": "string"
+												},
+												"BUILD_BUILDURI": {
+													"type": "string"
+												},
+												"BUILD_BINARIESDIRECTORY": {
+													"type": "string"
+												},
+												"BUILD_DEFINITIONNAME": {
+													"type": "string"
+												},
+												"BUILD_DEFINITIONVERSION": {
+													"type": "string"
+												},
+												"BUILD_REASON": {
+													"type": "string"
+												},
+												"BUILD_REPOSITORY_CLEAN": {
+													"type": "string"
+												},
+												"BUILD_REPOSITORY_LOCALPATH": {
+													"type": "string"
+												},
+												"BUILD_REPOSITORY_ID": {
+													"type": "string"
+												},
+												"BUILD_REPOSITORY_NAME": {
+													"type": "string"
+												},
+												"BUILD_REPOSITORY_PROVIDER": {
+													"type": "string"
+												}
+											}
+										},
+										"Agent": {
+											"type": "object",
+											"properties": {
+												"AGENT_BUILDDIRECTORY": {
+													"type": "string"
+												},
+												"AGENT_HOMEDIRECTORY": {
+													"type": "string"
+												},
+												"AGENT_ID": {
+													"type": "string"
+												},
+												"AGENT_JOBNAME": {
+													"type": "string"
+												},
+												"AGENT_JOBSTATUS": {
+													"type": "string"
+												},
+												"AGENT_MACHINENAME": {
+													"type": "string"
+												},
+												"AGENT_NAME": {
+													"type": "string"
+												},
+												"AGENT_OS": {
+													"type": "string"
+												},
+												"AGENT_OSARCHITECTURE": {
+													"type": "string"
+												},
+												"AGENT_TOOLSDIRECTORY": {
+													"type": "string"
+												},
+												"AGENT_WORKFOLDER": {
+													"type": "string"
+												}
+											}
+										},
+										"System": {
+											"type": "object",
+											"properties": {
+												"PIPELINE_WORKSPACE": {
+													"type": "string"
+												},
+												"SYSTEM_COLLECTIONID": {
+													"type": "string"
+												},
+												"SYSTEM_DEFAULTWORKINGDIRECTORY": {
+													"type": "string"
+												},
+												"SYSTEM_DEFINITIONID": {
+													"type": "string"
+												},
+												"SYSTEM_HOSTTYPE": {
+													"type": "string"
+												},
+												"SYSTEM_PULLREQUEST_ISFORK": {
+													"type": "string"
+												},
+												"SYSTEM_PULLREQUEST_PULLREQUESTID": {
+													"type": "null"
+												},
+												"SYSTEM_PULLREQUEST_PULLREQUESTNUMBER": {
+													"type": "null"
+												},
+												"SYSTEM_PULLREQUEST_SOURCEBRANCH": {
+													"type": "null"
+												},
+												"SYSTEM_PULLREQUEST_SOURCEREPOSITORYURI": {
+													"type": "null"
+												},
+												"SYSTEM_PULLREQUEST_TARGETBRANCH": {
+													"type": "null"
+												},
+												"SYSTEM_TASKDEFINITIONSURI": {
+													"type": "string"
+												},
+												"SYSTEM_TASKDISPLAYNAME": {
+													"type": "string"
+												},
+												"SYSTEM_TASKINSTANCEID": {
+													"type": "string"
+												},
+												"SYSTEM_TASKINSTANCENAME": {
+													"type": "string"
+												},
+												"SYSTEM_TEAMFOUNDATIONCOLLECTIONURI": {
+													"type": "string"
+												},
+												"SYSTEM_TEAMPROJECT": {
+													"type": "string"
+												},
+												"SYSTEM_TEAMPROJECTID": {
+													"type": "string"
+												},
+												"TASK_DISPLAYNAME": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						"Eso": {
+							"type": "array"
+						},
+						"Services": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"Name": {
+										"type": "string"
+									},
+									"Version": {
+										"type": "string"
+									},
+									"InUse": {
+										"type": "boolean"
+									},
+									"collectionSource": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"Templates": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"Name": {
+										"type": "string"
+									},
+									"Version": {
+										"type": "string"
+									},
+									"InUse": {
+										"type": "boolean"
+									},
+									"collectionSource": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"MRDR": {
+							"type": "array"
+						},
+						"UnsupportedFiles": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"Errors": {
+							"type": "object",
+							"properties": {
+								"CRITICAL": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"Source": {
+												"type": "string"
+											},
+											"Time": {
+												"type": "string"
+											},
+											"Message": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"ERROR": {
+									"type": "array"
+								},
+								"WARNING": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"Source": {
+												"type": "string"
+											},
+											"Time": {
+												"type": "string"
+											},
+											"Message": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"FilteredData": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"DataSource": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/accadlsinput')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/adfoutput')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -857,6 +1232,56 @@
 						"fileSystem": "adfoutput"
 					}
 				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adfoutputJSON')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "accoutput",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "adfoutput"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adfoutputdevopscsv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "accoutput",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "adfoutput"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
@@ -904,130 +1329,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/waginput1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/connstrinput')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sqlb1input",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "id",
-						"type": "bigint",
-						"precision": 19
-					},
-					{
-						"name": "connstr",
-						"type": "varchar"
-					},
-					{
-						"name": "inserttime",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "tblconnstr"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sqlb1input')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/csvouput')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accoutput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "iotdatadump"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/iotcentralblob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "iotcentralblob1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "3a11d300-d923-4a3d-9cd9-75364b23f710/telemetry/2020",
-						"fileSystem": "telemetry"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"EnqueuedTimeUtc": {
-							"type": "string"
-						},
-						"Properties": {
-							"type": "object"
-						},
-						"SystemProperties": {
-							"type": "object",
-							"properties": {
-								"connectionDeviceId": {
-									"type": "string"
-								},
-								"connectionAuthMethod": {
-									"type": "string"
-								},
-								"connectionDeviceGenerationId": {
-									"type": "string"
-								},
-								"contentType": {
-									"type": "string"
-								},
-								"interfaceName": {
-									"type": "string"
-								},
-								"enqueuedTime": {
-									"type": "string"
-								}
-							}
-						},
-						"Body": {
-							"type": "string"
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/iotcentralblob1')]"
 			]
 		}
 	]
