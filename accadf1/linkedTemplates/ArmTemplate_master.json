@@ -31,6 +31,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'waginput1'"
 		},
+		"accadlsinput_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'accadlsinput'"
+		},
 		"ADX1_properties_typeProperties_tenant": {
 			"type": "string",
 			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
@@ -54,6 +58,10 @@
 		"waginput1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://waginput.dfs.core.windows.net"
+		},
+		"accadlsinput_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://accbbstore.dfs.core.windows.net"
 		},
 		"containerUri": {
 			"type": "string",
@@ -100,6 +108,9 @@
 					"waginput1_accountKey": {
 						"value": "[parameters('waginput1_accountKey')]"
 					},
+					"accadlsinput_accountKey": {
+						"value": "[parameters('accadlsinput_accountKey')]"
+					},
 					"ADX1_properties_typeProperties_tenant": {
 						"value": "[parameters('ADX1_properties_typeProperties_tenant')]"
 					},
@@ -117,6 +128,9 @@
 					},
 					"waginput1_properties_typeProperties_url": {
 						"value": "[parameters('waginput1_properties_typeProperties_url')]"
+					},
+					"accadlsinput_properties_typeProperties_url": {
+						"value": "[parameters('accadlsinput_properties_typeProperties_url')]"
 					}
 				}
 			},
