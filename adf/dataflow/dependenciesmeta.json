@@ -1,0 +1,32 @@
+{
+	"name": "dependenciesmeta",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dependmetainput",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dependmetaoutput",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Flatten1"
+				}
+			],
+			"script": "source(output(\n\t\tcollectionSource as string,\n\t\tcustom as (Endpoints as string[], {InUse[Yes/No]} as boolean, Name as string),\n\t\tmeta as (requires as (jsonparse as string, through as string), dev as boolean),\n\t\tname as string,\n\t\tsource as string,\n\t\tsourceType as string,\n\t\ttype as string,\n\t\tversion as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 foldDown(unroll(custom.Endpoints),\n\tmapColumn(\n\t\tcollectionSource,\n\t\tEndpoints = custom.Endpoints,\n\t\t{InUse[Yes/No]} = custom.{InUse[Yes/No]},\n\t\tCustomName = custom.Name,\n\t\tmeta,\n\t\tname,\n\t\tsource,\n\t\tsourceType,\n\t\ttype,\n\t\tversion\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Flatten1\nFlatten1 sink(input(\n\t\tcollectionSource as string,\n\t\tcustom as (Endpoints as string[], {InUse[Yes/No]} as boolean, Name as string),\n\t\tmeta as (requires as (jsonparse as string, through as string), dev as boolean),\n\t\tname as string,\n\t\tsource as string,\n\t\tsourceType as string,\n\t\ttype as string,\n\t\tversion as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['dependmetaoutput.json'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+		}
+	}
+}

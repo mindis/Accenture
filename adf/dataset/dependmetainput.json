@@ -1,0 +1,77 @@
+{
+	"name": "dependmetainput",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "accoutput",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "outputdependencies.json",
+				"fileSystem": "adfoutput"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"collectionSource": {
+					"type": "string"
+				},
+				"custom": {
+					"type": "object",
+					"properties": {
+						"Endpoints": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"InUse[Yes/No]": {
+							"type": "boolean"
+						},
+						"Name": {
+							"type": "string"
+						}
+					}
+				},
+				"meta": {
+					"type": "object",
+					"properties": {
+						"requires": {
+							"type": "object",
+							"properties": {
+								"jsonparse": {
+									"type": "string"
+								},
+								"through": {
+									"type": "string"
+								}
+							}
+						},
+						"dev": {
+							"type": "boolean"
+						}
+					}
+				},
+				"name": {
+					"type": "string"
+				},
+				"source": {
+					"type": "string"
+				},
+				"sourceType": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
+				},
+				"version": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
