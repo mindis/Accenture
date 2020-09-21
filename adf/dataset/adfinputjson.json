@@ -1,0 +1,370 @@
+{
+	"name": "adfinputjson",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "accadlsinput",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "13456-2020.03.23.2-Sample2.json",
+				"fileSystem": "adfinput"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"AirID": {
+					"type": "integer"
+				},
+				"ComponentName": {
+					"type": "string"
+				},
+				"Version": {
+					"type": "string"
+				},
+				"Environment": {
+					"type": "array"
+				},
+				"Endpoints": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"Platform": {
+					"type": "string"
+				},
+				"Dependencies": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"version": {
+								"type": "string"
+							},
+							"type": {
+								"type": "string"
+							},
+							"sourceType": {
+								"type": "string"
+							},
+							"source": {
+								"type": "string"
+							},
+							"collectionSource": {
+								"type": "string"
+							},
+							"meta": {
+								"type": "object"
+							},
+							"custom": {
+								"type": "object",
+								"properties": {
+									"Name": {
+										"type": "string"
+									},
+									"Endpoints": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"InUse[Yes/No]": {
+										"type": "boolean"
+									}
+								}
+							}
+						}
+					}
+				},
+				"BuilderMeta": {
+					"type": "object",
+					"properties": {
+						"MetadataBuilder": {
+							"type": "object",
+							"properties": {
+								"version": {
+									"type": "string"
+								},
+								"updated": {
+									"type": "string"
+								}
+							}
+						},
+						"DateTime": {
+							"type": "string"
+						},
+						"VSTS": {
+							"type": "object",
+							"properties": {
+								"Build": {
+									"type": "object",
+									"properties": {
+										"BUILD_REPOSITORY_URI": {
+											"type": "string"
+										},
+										"BUILD_SOURCEBRANCHNAME": {
+											"type": "string"
+										},
+										"BUILD_ARTIFACTSTAGINGDIRECTORY": {
+											"type": "string"
+										},
+										"BUILD_BUILDID": {
+											"type": "string"
+										},
+										"BUILD_BUILDNUMBER": {
+											"type": "string"
+										},
+										"BUILD_BUILDURI": {
+											"type": "string"
+										},
+										"BUILD_BINARIESDIRECTORY": {
+											"type": "string"
+										},
+										"BUILD_DEFINITIONNAME": {
+											"type": "string"
+										},
+										"BUILD_DEFINITIONVERSION": {
+											"type": "string"
+										},
+										"BUILD_REASON": {
+											"type": "string"
+										},
+										"BUILD_REPOSITORY_CLEAN": {
+											"type": "string"
+										},
+										"BUILD_REPOSITORY_LOCALPATH": {
+											"type": "string"
+										},
+										"BUILD_REPOSITORY_ID": {
+											"type": "string"
+										},
+										"BUILD_REPOSITORY_NAME": {
+											"type": "string"
+										},
+										"BUILD_REPOSITORY_PROVIDER": {
+											"type": "string"
+										}
+									}
+								},
+								"Agent": {
+									"type": "object",
+									"properties": {
+										"AGENT_BUILDDIRECTORY": {
+											"type": "string"
+										},
+										"AGENT_HOMEDIRECTORY": {
+											"type": "string"
+										},
+										"AGENT_ID": {
+											"type": "string"
+										},
+										"AGENT_JOBNAME": {
+											"type": "string"
+										},
+										"AGENT_JOBSTATUS": {
+											"type": "string"
+										},
+										"AGENT_MACHINENAME": {
+											"type": "string"
+										},
+										"AGENT_NAME": {
+											"type": "string"
+										},
+										"AGENT_OS": {
+											"type": "string"
+										},
+										"AGENT_OSARCHITECTURE": {
+											"type": "string"
+										},
+										"AGENT_TOOLSDIRECTORY": {
+											"type": "string"
+										},
+										"AGENT_WORKFOLDER": {
+											"type": "string"
+										}
+									}
+								},
+								"System": {
+									"type": "object",
+									"properties": {
+										"PIPELINE_WORKSPACE": {
+											"type": "string"
+										},
+										"SYSTEM_COLLECTIONID": {
+											"type": "string"
+										},
+										"SYSTEM_DEFAULTWORKINGDIRECTORY": {
+											"type": "string"
+										},
+										"SYSTEM_DEFINITIONID": {
+											"type": "string"
+										},
+										"SYSTEM_HOSTTYPE": {
+											"type": "string"
+										},
+										"SYSTEM_PULLREQUEST_ISFORK": {
+											"type": "string"
+										},
+										"SYSTEM_PULLREQUEST_PULLREQUESTID": {
+											"type": "null"
+										},
+										"SYSTEM_PULLREQUEST_PULLREQUESTNUMBER": {
+											"type": "null"
+										},
+										"SYSTEM_PULLREQUEST_SOURCEBRANCH": {
+											"type": "null"
+										},
+										"SYSTEM_PULLREQUEST_SOURCEREPOSITORYURI": {
+											"type": "null"
+										},
+										"SYSTEM_PULLREQUEST_TARGETBRANCH": {
+											"type": "null"
+										},
+										"SYSTEM_TASKDEFINITIONSURI": {
+											"type": "string"
+										},
+										"SYSTEM_TASKDISPLAYNAME": {
+											"type": "string"
+										},
+										"SYSTEM_TASKINSTANCEID": {
+											"type": "string"
+										},
+										"SYSTEM_TASKINSTANCENAME": {
+											"type": "string"
+										},
+										"SYSTEM_TEAMFOUNDATIONCOLLECTIONURI": {
+											"type": "string"
+										},
+										"SYSTEM_TEAMPROJECT": {
+											"type": "string"
+										},
+										"SYSTEM_TEAMPROJECTID": {
+											"type": "string"
+										},
+										"TASK_DISPLAYNAME": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"Eso": {
+					"type": "array"
+				},
+				"Services": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"Name": {
+								"type": "string"
+							},
+							"Version": {
+								"type": "string"
+							},
+							"InUse": {
+								"type": "boolean"
+							},
+							"collectionSource": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"Templates": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"Name": {
+								"type": "string"
+							},
+							"Version": {
+								"type": "string"
+							},
+							"InUse": {
+								"type": "boolean"
+							},
+							"collectionSource": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"MRDR": {
+					"type": "array"
+				},
+				"UnsupportedFiles": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"Errors": {
+					"type": "object",
+					"properties": {
+						"CRITICAL": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"Source": {
+										"type": "string"
+									},
+									"Time": {
+										"type": "string"
+									},
+									"Message": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"ERROR": {
+							"type": "array"
+						},
+						"WARNING": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"Source": {
+										"type": "string"
+									},
+									"Time": {
+										"type": "string"
+									},
+									"Message": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"FilteredData": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"DataSource": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}

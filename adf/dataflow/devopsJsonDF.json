@@ -1,0 +1,32 @@
+{
+	"name": "devopsJsonDF",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "adfinputjson",
+						"type": "DatasetReference"
+					},
+					"name": "inputJSON"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "adfoutputdevopscsv",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Flatten1"
+				}
+			],
+			"script": "source(output(\n\t\tAirID as string,\n\t\tComponentName as string,\n\t\tVersion as string,\n\t\tEnvironment as string[],\n\t\tEndpoints as string[],\n\t\tPlatform as string,\n\t\tDependencies as (name as string, version as string, type as string, sourceType as string, source as string, collectionSource as string, meta as ({} as string), custom as (Name as string, Endpoints as string[], {InUse[Yes/No]} as boolean))[],\n\t\tBuilderMeta as (MetadataBuilder as (version as string, updated as string), DateTime as string, VSTS as (Build as (BUILD_REPOSITORY_URI as string, BUILD_SOURCEBRANCHNAME as string, BUILD_ARTIFACTSTAGINGDIRECTORY as string, BUILD_BUILDID as string, BUILD_BUILDNUMBER as string, BUILD_BUILDURI as string, BUILD_BINARIESDIRECTORY as string, BUILD_DEFINITIONNAME as string, BUILD_DEFINITIONVERSION as string, BUILD_REASON as string, BUILD_REPOSITORY_CLEAN as string, BUILD_REPOSITORY_LOCALPATH as string, BUILD_REPOSITORY_ID as string, BUILD_REPOSITORY_NAME as string, BUILD_REPOSITORY_PROVIDER as string), Agent as (AGENT_BUILDDIRECTORY as string, AGENT_HOMEDIRECTORY as string, AGENT_ID as string, AGENT_JOBNAME as string, AGENT_JOBSTATUS as string, AGENT_MACHINENAME as string, AGENT_NAME as string, AGENT_OS as string, AGENT_OSARCHITECTURE as string, AGENT_TOOLSDIRECTORY as string, AGENT_WORKFOLDER as string), System as (PIPELINE_WORKSPACE as string, SYSTEM_COLLECTIONID as string, SYSTEM_DEFAULTWORKINGDIRECTORY as string, SYSTEM_DEFINITIONID as string, SYSTEM_HOSTTYPE as string, SYSTEM_PULLREQUEST_ISFORK as string, SYSTEM_PULLREQUEST_PULLREQUESTID as string, SYSTEM_PULLREQUEST_PULLREQUESTNUMBER as string, SYSTEM_PULLREQUEST_SOURCEBRANCH as string, SYSTEM_PULLREQUEST_SOURCEREPOSITORYURI as string, SYSTEM_PULLREQUEST_TARGETBRANCH as string, SYSTEM_TASKDEFINITIONSURI as string, SYSTEM_TASKDISPLAYNAME as string, SYSTEM_TASKINSTANCEID as string, SYSTEM_TASKINSTANCENAME as string, SYSTEM_TEAMFOUNDATIONCOLLECTIONURI as string, SYSTEM_TEAMPROJECT as string, SYSTEM_TEAMPROJECTID as string, TASK_DISPLAYNAME as string))),\n\t\tEso as string[],\n\t\tServices as (Name as string, Version as string, InUse as boolean, collectionSource as string)[],\n\t\tTemplates as (Name as string, Version as string, InUse as boolean, collectionSource as string)[],\n\t\tMRDR as string[],\n\t\tUnsupportedFiles as string[],\n\t\tErrors as (CRITICAL as (Source as string, Time as string, Message as string)[], ERROR as string[], WARNING as (Source as string, Time as string, Message as string)[]),\n\t\tFilteredData as string[],\n\t\tDataSource as string[]\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> inputJSON\ninputJSON foldDown(unroll(Dependencies),\n\tmapColumn(\n\t\tAirID,\n\t\tComponentName,\n\t\tVersion,\n\t\tEnvironment,\n\t\tEndpoints,\n\t\tPlatform,\n\t\tDependencies = Dependencies,\n\t\tBuilderMeta,\n\t\tEso,\n\t\tServices,\n\t\tTemplates,\n\t\tMRDR,\n\t\tUnsupportedFiles,\n\t\tErrors,\n\t\tFilteredData,\n\t\tDataSource\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Flatten1\nFlatten1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+		}
+	}
+}
