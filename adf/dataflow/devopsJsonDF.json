@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "adfoutputdevopscsv",
+						"referenceName": "adfoutputJSON",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"

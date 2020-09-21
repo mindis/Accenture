@@ -1,0 +1,17 @@
+{
+	"name": "adfoutputJSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "accoutput",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "adfoutput"
+			}
+		}
+	}
+}
