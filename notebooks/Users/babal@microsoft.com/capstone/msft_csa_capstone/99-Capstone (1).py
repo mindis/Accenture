@@ -469,6 +469,14 @@ realityCheckGold(silverToGold)
 
 # COMMAND ----------
 
+print(outputPathGold)
+
+# COMMAND ----------
+
+spark.sql("DROP TABLE mobile_events_delta_gold")
+
+# COMMAND ----------
+
 # TODO
 spark.sql("""
    CREATE TABLE IF NOT EXISTS mobile_events_delta_gold
