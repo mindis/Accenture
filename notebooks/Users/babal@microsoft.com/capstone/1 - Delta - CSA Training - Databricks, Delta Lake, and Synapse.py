@@ -343,3 +343,5 @@ close master key;
 
 # COMMAND ----------
 
+# MAGIC %sql
+# MAGIC SELECT * FROM SynCDRGold
