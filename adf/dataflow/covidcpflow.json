@@ -1,0 +1,32 @@
+{
+	"name": "covidcpflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "covidinput",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTableCovid",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Select1"
+				}
+			],
+			"script": "source(output(\n\t\tSNo as string,\n\t\tObservationDate as date,\n\t\t{Province/State} as string,\n\t\t{Country/Region} as string,\n\t\t{Last Update} as date,\n\t\tConfirmed as float,\n\t\tDeaths as float,\n\t\tRecovered as float\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 select(mapColumn(\n\t\tSNo,\n\t\tObservationDate,\n\t\t{Province/State},\n\t\t{Country/Region},\n\t\t{Last Update},\n\t\tConfirmed,\n\t\tDeaths,\n\t\tRecovered\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 sink(input(\n\t\tSNo as integer,\n\t\tObservationDate as timestamp,\n\t\tProvinceState as string,\n\t\tCountryRegion as string,\n\t\tLastUpdate as timestamp,\n\t\tConfirmed as decimal(18,2),\n\t\tDeaths as decimal(18,2),\n\t\tRecovered as decimal(18,2)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+		}
+	}
+}
