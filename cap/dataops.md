@@ -30,6 +30,17 @@ Use log analytics to get all logs and then build one dashboard for operations. A
 - Azure KeyVault
 - Application Insights
 
+## PaaS Services Dashboard
+
+https://docs.microsoft.com/en-us/azure/service-health/service-health-overview
+
+- please follow the above best practise to know if any service outages in your area.
+
+Status page:
+
+- https://status.azure.com/status/
+- the above page will provide status of services region wise.
+
 ## Azure Data Factory
 
 - ActivityFailedRuns
@@ -43,12 +54,17 @@ Use log analytics to get all logs and then build one dashboard for operations. A
 
 - Uptime of Azure Datafactory service is shows in Azure Service Availbility dashboard.
 
+- Data Flow is an area need more details.
+- Capacity
+
 ## Azure Functions
 
 - Failed Requests
 - Server Response Time
 - Server requests
 - Avaibility
+- Code errors has to be updated into application insights to build custom dashboard.
+- Capacity
 
 ## Azure Databricks
 
@@ -58,8 +74,11 @@ Use log analytics to get all logs and then build one dashboard for operations. A
 - operationName
 - jobs
 - Availibility
+- Capacity
 
 - Availability for Data Bricks would some like Completed jobs vs failed jobs. For Example 100 jobs ran and 10 failed so the availability is 90%. This is for Jobs operation. I believe Jobs with 200 status code and Jobs with status code <> 200 can provide these details to calculate the formula.
+
+- Databricks application code based is using application insights and push to log analytics and build a new dashboard. These are KPI's based on customer application specific and can vary based on what they are business logic's are.
 
 ## azure synapse analytics
 
@@ -71,6 +90,7 @@ Use log analytics to get all logs and then build one dashboard for operations. A
 - Queued Queries
 
 - DWU percentage is good one to watch as more DWU usuage performance will degrade.
+- Capacity
 
 ## Log Analytics
 
@@ -117,3 +137,12 @@ DatabricksAccounts
 ADFActivityRun
 | limit 100
 ```
+
+## Build Run Ops Team
+
+- Create a Team of professional
+- Create an Organization
+- Create a Run Book
+- Design and develop Run Ops Operation manual
+- Provide esclation process
+- Automate support related issues
