@@ -39,6 +39,10 @@ Use log analytics to get all logs and then build one dashboard for operations. A
 - PipelineSucceededRuns
 - Availability
 
+- Availability for Data Factory would some like Completed jobs vs failed jobs. For Example 100 jobs ran and 10 failed so the availability is 90%. This is for Jobs operation. I believe PipelineSucceededRuns and PipelineFailedRuns can provide these details to calculate the formula.
+
+- Uptime of Azure Datafactory service is shows in Azure Service Availbility dashboard.
+
 ## Azure Functions
 
 - Failed Requests
@@ -55,6 +59,8 @@ Use log analytics to get all logs and then build one dashboard for operations. A
 - jobs
 - Availibility
 
+- Availability for Data Bricks would some like Completed jobs vs failed jobs. For Example 100 jobs ran and 10 failed so the availability is 90%. This is for Jobs operation. I believe Jobs with 200 status code and Jobs with status code <> 200 can provide these details to calculate the formula.
+
 ## azure synapse analytics
 
 - CPU percentage
@@ -63,6 +69,8 @@ Use log analytics to get all logs and then build one dashboard for operations. A
 - DWU percentage
 - Local Temp percentage
 - Queued Queries
+
+- DWU percentage is good one to watch as more DWU usuage performance will degrade.
 
 ## Log Analytics
 
