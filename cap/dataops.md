@@ -41,6 +41,23 @@ Status page:
 - https://status.azure.com/status/
 - the above page will provide status of services region wise.
 
+## Monitoring requirements
+
+|                 | Scope           | Related Metrics/Events to Watch*  | Metric/Source Source | Monitoring Platform(s) to Use (Monitor, Log Analytics, etc.) | ServiceNow Integration Method (direct or through another tool)
+| --------------- |:---------------:| ---------------------------------:| --------------------:| -----------------------------------------:|----------------------------:| --------------------:|
+| Availability    | Central, shared AzDL solution | Synthetic Transactions | E2E | AppInsights | Alert to Incident |
+|                 | Per application/dashboard     | Synthetic Transactions | E2E | AppInsights | Alert to Incident |
+|                 | In aggregate across AzDL      | Service Health         | E2E | AppInsights | Alert to Incident |
+| Performance     | Central, shared AzDL solution | Synthetic Transactions | E2E | AppInsights | Alert to Incident |
+|                 | Per application/dashboard     | Synthetic Transactions | E2E | AppInsights | Alert to Incident |
+|                 | In aggregate across AzDL      | Service Health         | E2E | AppInsights | Alert to Incident |
+| Capacity        | Central, shared AzDL solution | Synthetic Transactions | E2E | AppInsights | Alert to Incident |
+|                 | Per application/dashboard     | Synthetic Transactions | E2E | AppInsights | Alert to Incident |
+|                 | In aggregate across AzDL      | Service Health         | E2E | AppInsights | Alert to Incident |
+| Operational cost| Cost Management by Resource Group | Cost Management | Cost Management |         |        |
+|                 |  Cost Management by Resource Group     | Cost Management | Cost Management |       |     |
+|                 |  Cost Management by Resource Group     | Cost Management        | Cost Management |      |     |
+
 ## Azure Data Factory
 
 - ActivityFailedRuns
