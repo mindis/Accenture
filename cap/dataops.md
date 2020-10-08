@@ -43,8 +43,8 @@ Status page:
 
 ## Monitoring requirements
 
-|                 | Scope           | Related Metrics/Events to Watch*  | Metric/Source Source | Monitoring Platform(s) to Use (Monitor, Log Analytics, etc.) | ServiceNow Integration Method (direct or through another tool)
-| --------------- |:---------------:| ---------------------------------:| --------------------:| -----------------------------------------:|----------------------------:| --------------------:|
+|                 | Scope           | Related Metrics/Events to Watch*  | Metric/Source Source | Monitoring Platform(s) to Use (Monitor, Log Analytics, etc.) | ServiceNow Integration Method (direct or through another tool) |
+| --------------- |:---------------:| ---------------------------------:| --------------------:| -----------------------------------------:|----------------------------:| --------------------------------:|
 | Availability    | Central, shared AzDL solution | Synthetic Transactions | E2E | AppInsights | Alert to Incident |
 |                 | Per application/dashboard     | Synthetic Transactions | E2E | AppInsights | Alert to Incident |
 |                 | In aggregate across AzDL      | Service Health         | E2E | AppInsights | Alert to Incident |
