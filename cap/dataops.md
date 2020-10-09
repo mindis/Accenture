@@ -43,20 +43,20 @@ Status page:
 
 ## Monitoring requirements
 
-| Options         | Scope           | Related Metrics/Events to Watch*  | Metric/Source Source | Monitoring Platform(s) to Use (Monitor, Log Analytics, etc.) | ServiceNow Integration Method (direct or through another tool) | <br>
-| --------------- |:---------------:| ---------------------------------:| --------------------:| -----------------------------------------:|----------------------------:| --------------------------------:| <br>
-| Availability    | Central, shared AzDL solution | Synthetic Transactions | E2E | AppInsights | Alert to Incident | <br>
-|                 | Per application/dashboard     | Synthetic Transactions | E2E | AppInsights | Alert to Incident |<br>
-|                 | In aggregate across AzDL      | Service Health         | E2E | AppInsights | Alert to Incident |<br>
-| Performance     | Central, shared AzDL solution | Synthetic Transactions | E2E | AppInsights | Alert to Incident |<br>
-|                 | Per application/dashboard     | Synthetic Transactions | E2E | AppInsights | Alert to Incident |<br>
-|                 | In aggregate across AzDL      | Service Health         | E2E | AppInsights | Alert to Incident |<br>
-| Capacity        | Central, shared AzDL solution | Synthetic Transactions | E2E | AppInsights | Alert to Incident |<br>
-|                 | Per application/dashboard     | Synthetic Transactions | E2E | AppInsights | Alert to Incident |<br>
-|                 | In aggregate across AzDL      | Service Health         | E2E | AppInsights | Alert to Incident |<br>
-| Operational cost| Cost Management by Resource Group | Cost Management | Cost Management |         |        |<br>
-|                 |  Cost Management by Resource Group     | Cost Management | Cost Management |       |     |<br>
-|                 |  Cost Management by Resource Group     | Cost Management        | Cost Management |      |     |<br>
+|                  | scope                             | Related Metrics/Events to Watch* | Metric/Source Source | Monitoring Platform(s) to Use (Monitor, Log Analytics, etc.) | ServiceNow Integration Method (direct or through another tool) |
+|------------------|-----------------------------------|----------------------------------|----------------------|--------------------------------------------------------------|----------------------------------------------------------------|
+| Availability     | Central, shared AzDL solution     | Synthentic Transcations          | E2E                  | App Insights                                                 | Alert to incidents                                             |
+|                  | Per application/dashboard         | Synthentic Transcations          | E2E                  | App Insights                                                 | Alert to incidents                                             |
+|                  | In aggregate across AzDL          | Service Health                   | E2E                  | App Insights                                                 | Alert to incidents                                             |
+| Performance      | Central, shared AzDL solution     | Synthentic Transcations          | E2E                  | App Insights                                                 | Alert to incidents                                             |
+|                  | Per application/dashboard         | Synthentic Transcations          | E2E                  | App Insights                                                 | Alert to incidents                                             |
+|                  | In aggregate across AzDL          | Service Health                   | E2E                  | App Insights                                                 | Alert to incidents                                             |
+| Capacity         | Central, shared AzDL solution     | Synthentic Transcations          | E2E                  | App Insights                                                 | Alert to incidents                                             |
+|                  | Per application/dashboard         | Synthentic Transcations          | E2E                  | App Insights                                                 | Alert to incidents                                             |
+|                  | In aggregate across AzDL          | Service Health                   | E2E                  | App Insights                                                 | Alert to incidents                                             |
+| Operational Cost | Cost Management by Resource Group | Cost Management                  | Cost Management      |                                                              |                                                                |
+|                  | Cost Management by Resource Group | Cost Management                  | Cost Management      |                                                              |                                                                |
+|                  | Cost Management by Resource Group | Cost Management                  | Cost Management      |                                                              |                                                                |
 
 ## Azure Data Factory
 
