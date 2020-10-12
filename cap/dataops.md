@@ -85,6 +85,9 @@ Status page:
 
 - Data Flow is an area need more details.
 - Capacity
+- Azure Data Factory Azure Monitor - https://docs.microsoft.com/en-us/azure/data-factory/monitor-using-azure-monitor
+- Azure Data Factory Alerts - https://azure.microsoft.com/en-in/blog/create-alerts-to-proactively-monitor-your-data-factory-pipelines/
+
 
 ## Azure Functions
 
@@ -109,7 +112,10 @@ Status page:
 
 - Databricks application code based is using application insights and push to log analytics and build a new dashboard. These are KPI's based on customer application specific and can vary based on what they are business logic's are.
 
-## azure synapse analytics
+- Azure Databricks monitor with Azure Monitor - https://docs.microsoft.com/en-us/azure/architecture/databricks-monitoring/
+- Using Application insights - https://docs.microsoft.com/en-us/archive/msdn-magazine/2018/june/azure-databricks-monitoring-azure-databricks-jobs-with-application-insights
+
+## Azure Synapse Analytics
 
 - CPU percentage
 - Data IO percentage
@@ -175,3 +181,7 @@ ADFActivityRun
 - Design and develop Run Ops Operation manual
 - Provide esclation process
 - Automate support related issues
+
+## Reference
+
+- https://github.com/Azure-Samples/modern-data-warehouse-dataops/tree/master/e2e_samples/parking_sensors#observability--monitoring
