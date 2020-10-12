@@ -41,6 +41,18 @@ Status page:
 - https://status.azure.com/status/
 - the above page will provide status of services region wise.
 
+## Azure Service Health Page in Portal
+
+- Go to Azure Portal
+- Seach for Service health
+- Click the service health resource
+- Select the subscription
+- Select the regions where application are deployed
+- Select the services for the application
+- Save as and give a name for the view.
+
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/servicehealth.jpg "Service Health")
+
 ## Monitoring requirements
 
 |                  | scope                             | Related Metrics/Events to Watch* | Metric/Source Source | Monitoring Platform(s) to Use (Monitor, Log Analytics, etc.) | ServiceNow Integration Method (direct or through another tool) |
