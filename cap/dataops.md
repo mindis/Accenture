@@ -8,6 +8,12 @@ Proper reporting and alerting when job fails in any steps or processing or data 
 
 ## Architecture
 
+## Logical
+
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/monitoropslogical.jpg "Service Health")
+
+## Technical Architecture
+
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/referencearchitecture.jpg "Architecture 1")
 
 ## Solution - Log Analytics
