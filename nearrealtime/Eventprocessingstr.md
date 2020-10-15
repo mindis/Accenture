@@ -1,5 +1,9 @@
 # Azure Event hub - Stream processing with Azure Data Bricks
 
+## Architecture
+
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/nearrealtime.jpg "Service Health")
+
 ## Create Structured Streaming
 
 ## Create Azure Keyvault
