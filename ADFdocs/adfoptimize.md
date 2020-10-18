@@ -8,42 +8,42 @@ The below was tested in azure datafactory to show different form using AutoResol
 
 - Here is the both run compared in high level
 
-![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/adfopt3.jpg "ADF")
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/adfopt3.jpg "ADF")
 
 ## ADF using autointegration runtime with TTL = 0 minutes
 
 - Let's first see the auto integration runtime which is created by azure data factory by default. So we cannot change the TTL which will be set to 0 minutes
 
-![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/adfopt1.jpg "ADF")
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/adfopt1.jpg "ADF")
 
 - Make sure the set all the linked services and data flow to auto resolve runtime. By default this would be set.
 - Create all the workflow(Pipeline) with combination of ADF activities and also data flow
 - Trigger the job manually and check it.
 - Below is the high level flow
 
-![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/adfopt4.jpg "ADF")
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/adfopt4.jpg "ADF")
 
 - now the inside child pipeline 
 
-![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/adfopt5.jpg "ADF")
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/adfopt5.jpg "ADF")
 
 
 ## ADF using integration runtime with TTL = 15 minutes
 
 - Let's first create azure self hosted integration runtime. Set the TTL to 15 minutes and select which cores are upto you.
 
-![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/adfopt2.jpg "ADF")
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/adfopt2.jpg "ADF")
 
 - Make sure the set all the linked services and data flow to Azure hosted intergation runtime. By default this would be set.
 - Create all the workflow(Pipeline) with combination of ADF activities and also data flow
 - Trigger the job manually and check it.
 - Below is the high level flow
 
-![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/adfopt6.jpg "ADF")
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/adfopt6.jpg "ADF")
 
 - now the inside child pipeline 
 
-![alt text](https://github.com/balakreshnan/Accenture/blob/master/cap/images/adfopt7.jpg "ADF")
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/adfopt7.jpg "ADF")
 
 ## conclusion
 
