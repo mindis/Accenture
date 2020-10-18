@@ -18,7 +18,8 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": "select connstr from tblconnstr;",
-						"queryTimeout": "02:00:00"
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "connstrinput",
@@ -139,9 +140,9 @@
 										}
 									}
 								},
-								"compute": {
-									"coreCount": 8,
-									"computeType": "General"
+								"integrationRuntime": {
+									"referenceName": "integrationRuntime1",
+									"type": "IntegrationRuntimeReference"
 								}
 							}
 						}
