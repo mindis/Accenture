@@ -45,7 +45,7 @@ The below was tested in azure datafactory to show different form using AutoResol
 
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/adfopt7.jpg "ADF")
 
-## conclusion
+## Conclusion
 
 - TTL really helps on not the first flow but the following ones
 - The first data flow cluster takes between 4 to 5 minutes.
