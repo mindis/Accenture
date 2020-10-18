@@ -11,29 +11,29 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'servicePrincipalKey' of 'ADX1'"
 		},
-		"accadlsinput_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'accadlsinput'"
-		},
 		"accdeltaoutput_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'accdeltaoutput'"
-		},
-		"accoutput_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'accoutput'"
 		},
 		"iotcentralblob1_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'iotcentralblob1'"
 		},
-		"sqlb1input_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'sqlb1input'"
-		},
 		"waginput1_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'waginput1'"
+		},
+		"accadlsinput_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'accadlsinput'"
+		},
+		"accoutput_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'accoutput'"
+		},
+		"sqlb1input_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'sqlb1input'"
 		},
 		"ADX1_properties_typeProperties_tenant": {
 			"type": "string",
@@ -47,14 +47,6 @@
 			"type": "string",
 			"defaultValue": "jemtsdb"
 		},
-		"accadlsinput_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://accbbstore.dfs.core.windows.net"
-		},
-		"accoutput_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://accbbstore.dfs.core.windows.net"
-		},
 		"iotcentralblob1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://iotcentralstore.dfs.core.windows.net"
@@ -62,6 +54,14 @@
 		"waginput1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://waginput.dfs.core.windows.net"
+		},
+		"accadlsinput_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://accbbstore.dfs.core.windows.net"
+		},
+		"accoutput_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://accbbstore.dfs.core.windows.net"
 		}
 	},
 	"variables": {
@@ -89,23 +89,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/accadlsinput')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('accadlsinput_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('accadlsinput_accountKey')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/accdeltaoutput')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -114,23 +97,6 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('accdeltaoutput_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/accoutput')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('accoutput_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('accoutput_accountKey')]"
-					}
 				}
 			},
 			"dependsOn": []
@@ -153,19 +119,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/sqlb1input')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('sqlb1input_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/waginput1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -177,6 +130,25 @@
 					"accountKey": {
 						"type": "SecureString",
 						"value": "[parameters('waginput1_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/integrationRuntime1')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 16,
+							"timeToLive": 15
+						}
 					}
 				}
 			},
@@ -200,6 +172,175 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ADX1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Binarycopy')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "waginput1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "opendataset"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/waginput1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/cdminput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "waginput1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "cdm"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/waginput1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/iotcentralblob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "iotcentralblob1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "3a11d300-d923-4a3d-9cd9-75364b23f710/telemetry/2020",
+						"fileSystem": "telemetry"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"EnqueuedTimeUtc": {
+							"type": "string"
+						},
+						"Properties": {
+							"type": "object"
+						},
+						"SystemProperties": {
+							"type": "object",
+							"properties": {
+								"connectionDeviceId": {
+									"type": "string"
+								},
+								"connectionAuthMethod": {
+									"type": "string"
+								},
+								"connectionDeviceGenerationId": {
+									"type": "string"
+								},
+								"contentType": {
+									"type": "string"
+								},
+								"interfaceName": {
+									"type": "string"
+								},
+								"enqueuedTime": {
+									"type": "string"
+								}
+							}
+						},
+						"Body": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/iotcentralblob1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/accadlsinput')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('accadlsinput_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('accadlsinput_accountKey')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime1",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/accoutput')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('accoutput_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('accoutput_accountKey')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime1",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sqlb1input')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('sqlb1input_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime1",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
 			]
 		},
 		{
@@ -287,28 +428,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Binarycopy')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "waginput1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "opendataset"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/waginput1')]"
 			]
 		},
 		{
@@ -1295,78 +1414,6 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileSystem": "adfoutput"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/adfoutputJSON')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accoutput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "adfoutput"
-					}
-				},
-				"schema": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/adfoutputdevopscsv')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accoutput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "adfoutput"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/cdmOutput')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accoutput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "cdm"
 					}
 				}
 			},

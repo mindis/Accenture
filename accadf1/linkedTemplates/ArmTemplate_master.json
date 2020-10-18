@@ -93,23 +93,23 @@
 					"ADX1_servicePrincipalKey": {
 						"value": "[parameters('ADX1_servicePrincipalKey')]"
 					},
-					"accadlsinput_accountKey": {
-						"value": "[parameters('accadlsinput_accountKey')]"
-					},
 					"accdeltaoutput_connectionString": {
 						"value": "[parameters('accdeltaoutput_connectionString')]"
-					},
-					"accoutput_accountKey": {
-						"value": "[parameters('accoutput_accountKey')]"
 					},
 					"iotcentralblob1_accountKey": {
 						"value": "[parameters('iotcentralblob1_accountKey')]"
 					},
-					"sqlb1input_connectionString": {
-						"value": "[parameters('sqlb1input_connectionString')]"
-					},
 					"waginput1_accountKey": {
 						"value": "[parameters('waginput1_accountKey')]"
+					},
+					"accadlsinput_accountKey": {
+						"value": "[parameters('accadlsinput_accountKey')]"
+					},
+					"accoutput_accountKey": {
+						"value": "[parameters('accoutput_accountKey')]"
+					},
+					"sqlb1input_connectionString": {
+						"value": "[parameters('sqlb1input_connectionString')]"
 					},
 					"ADX1_properties_typeProperties_tenant": {
 						"value": "[parameters('ADX1_properties_typeProperties_tenant')]"
@@ -120,17 +120,17 @@
 					"ADX1_properties_typeProperties_database": {
 						"value": "[parameters('ADX1_properties_typeProperties_database')]"
 					},
-					"accadlsinput_properties_typeProperties_url": {
-						"value": "[parameters('accadlsinput_properties_typeProperties_url')]"
-					},
-					"accoutput_properties_typeProperties_url": {
-						"value": "[parameters('accoutput_properties_typeProperties_url')]"
-					},
 					"iotcentralblob1_properties_typeProperties_url": {
 						"value": "[parameters('iotcentralblob1_properties_typeProperties_url')]"
 					},
 					"waginput1_properties_typeProperties_url": {
 						"value": "[parameters('waginput1_properties_typeProperties_url')]"
+					},
+					"accadlsinput_properties_typeProperties_url": {
+						"value": "[parameters('accadlsinput_properties_typeProperties_url')]"
+					},
+					"accoutput_properties_typeProperties_url": {
+						"value": "[parameters('accoutput_properties_typeProperties_url')]"
 					}
 				}
 			},
