@@ -220,9 +220,9 @@
 											}
 										},
 										"staging": {},
-										"compute": {
-											"coreCount": 8,
-											"computeType": "General"
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime1",
+											"type": "IntegrationRuntimeReference"
 										}
 									}
 								}
@@ -241,7 +241,8 @@
 				"[concat(variables('factoryId'), '/datasets/connstrinput')]",
 				"[concat(variables('factoryId'), '/datasets/adfinput')]",
 				"[concat(variables('factoryId'), '/datasets/adfoutput')]",
-				"[concat(variables('factoryId'), '/dataflows/fordataflow')]"
+				"[concat(variables('factoryId'), '/dataflows/fordataflow')]",
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
 			]
 		},
 		{
@@ -514,9 +515,9 @@
 								}
 							},
 							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime1",
+								"type": "IntegrationRuntimeReference"
 							}
 						}
 					},
@@ -556,9 +557,9 @@
 								}
 							},
 							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime1",
+								"type": "IntegrationRuntimeReference"
 							}
 						}
 					},
@@ -592,9 +593,9 @@
 								}
 							},
 							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime1",
+								"type": "IntegrationRuntimeReference"
 							}
 						}
 					},
@@ -624,6 +625,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/devopsJsonDF')]",
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]",
 				"[concat(variables('factoryId'), '/dataflows/devopsenv')]",
 				"[concat(variables('factoryId'), '/dataflows/dependenciesmeta')]",
 				"[concat(variables('factoryId'), '/pipelines/ForEachTest')]"
@@ -2430,6 +2432,25 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/integrationRuntime1')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 16,
+							"timeToLive": 15
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/covidcpflow')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -2763,25 +2784,6 @@
 				"[concat(variables('factoryId'), '/datasets/Parquet1incoming')]",
 				"[concat(variables('factoryId'), '/linkedServices/accdeltaoutput')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/integrationRuntime1')]",
-			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "Managed",
-				"typeProperties": {
-					"computeProperties": {
-						"location": "AutoResolve",
-						"dataFlowProperties": {
-							"computeType": "General",
-							"coreCount": 16,
-							"timeToLive": 15
-						}
-					}
-				}
-			},
-			"dependsOn": []
 		}
 	]
 }
