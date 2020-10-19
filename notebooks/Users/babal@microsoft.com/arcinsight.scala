@@ -23,3 +23,21 @@ data.createOrReplaceTempView("devopsdata")
 
 // MAGIC %sql
 // MAGIC Select * from devopsdata limit 10;
+
+// COMMAND ----------
+
+data.printSchema
+
+// COMMAND ----------
+
+import org.apache.spark.sql.types._                         // include the Spark Types to define our schema
+import org.apache.spark.sql.functions._   
+
+// COMMAND ----------
+
+val jsDF = data.select($"AirID", get_json_object($"Dependencies", "$.element.collectionSource").alias("CollectionSource"),
+                                          get_json_object($"Dependencies", "$.element.custom").alias("custom"),
+                                         get_json_object($"Dependencies", "$.element.meta").alias("meta"))
+
+// COMMAND ----------
+
