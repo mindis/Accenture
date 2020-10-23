@@ -420,7 +420,8 @@ print(f'AUC: {roc_auc_score(y_test, model.predict(X_test))}')
 # In the real world, this would be a new batch of data.
 spark_df = spark.createDataFrame(X_train)
 # Replace <username> with your username before running this cell.
-table_path = "dbfs:/<username>/delta/wine_data"
+#dbfs/FileStore/tables
+table_path = "dbfs:/bb/delta/wine_data"
 # Delete the contents of this path in case this cell has already been run
 dbutils.fs.rm(table_path, True)
 spark_df.write.format("delta").save(table_path)
