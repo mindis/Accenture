@@ -1,4 +1,8 @@
 // Databricks notebook source
+//https://eventhubdatagenerator.azurewebsites.net/
+
+// COMMAND ----------
+
 import org.apache.spark.eventhubs
 import org.apache.spark.eventhubs.{ ConnectionStringBuilder, EventHubsConf, EventPosition }
 
@@ -67,15 +71,47 @@ display(streamingSelectDF)
 
 // COMMAND ----------
 
-// split lines by whitespaces and explode the array as rows of 'word'
-val df = eventhubs.select(explode(split($"body".cast("string"), "\\s+")).as("word"))
-  .groupBy($"word")
-  .count
+//avro
+{
+    "type": "record",
+    "name": "AvroUser",
+    "namespace": "com.azure.schemaregistry.samples",
+    "fields": [
+        {
+            "name": "sensor_id",
+            "type": "int"
+        },
+        {
+            "name": "sensor_temp",
+            "type": "int"
+        },
+        {
+            "name": "sensor_status",
+            "type": "string"
+        }
+    ]
+}
 
 // COMMAND ----------
 
-display(df)
+//sample payload
+//https://eventhubdatagenerator.azurewebsites.net/
+{
+  "sensor_id":{
+    "faker": {
+      "fake": "{{random.number(100)}}"
+    }
+  },
+  "sensor_temp": {
+    "type": "integer", "minimum": "18", "maximum": "100"
+  },
+  "sensor_status": {
+    "type": "string",
+    "faker": {
+      "random.arrayElement": [["OK", "WARN", "FAIL"]]
+    }
+  }
+}
 
 // COMMAND ----------
 
-display(df.select($"word", $"count"))
