@@ -1,6 +1,10 @@
 # Databricks notebook source
 from azure.schemaregistry import SchemaRegistryClient
-#from azure.identity import 
+
+
+# COMMAND ----------
+
+from azure.identity import 
 
 # COMMAND ----------
 
@@ -107,6 +111,31 @@ df1 = df.select(get_json_object(df['body'],"$.sensor_id").alias('sensor_id'),
 # COMMAND ----------
 
 display(df1)
+
+# COMMAND ----------
+
+from azure.schemaregistry import SchemaRegistryClient
+from azure.schemaregistry.serializer.avroserializer import SchemaRegistryAvroSerializer
+from azure.identity import DefaultAzureCredential
+
+# COMMAND ----------
+
+import os
+from azure.eventhub import EventHubConsumerClient
+from azure.schemaregistry import SchemaRegistryClient
+from azure.schemaregistry.serializer.avroserializer import SchemaRegistryAvroSerializer
+from azure.identity import DefaultAzureCredential
+
+# COMMAND ----------
+
+token_credential = DefaultAzureCredential()
+endpoint = os.environ['SCHEMA_REGISTRY_ENDPOINT']
+schema_group = "sample1"
+eventhub_connection_str = os.environ['EVENT_HUB_CONN_STR']
+eventhub_name = os.environ['EVENT_HUB_NAME']
+
+schema_registry_client = SchemaRegistryClient(endpoint, token_credential)
+avro_serializer = SchemaRegistryAvroSerializer(schema_registry_client, schema_group)
 
 # COMMAND ----------
 
