@@ -1,10 +1,10 @@
 # Databricks notebook source
 from azure.schemaregistry import SchemaRegistryClient
 
-
 # COMMAND ----------
 
-from azure.identity import 
+from azure.identity import *
+import json
 
 # COMMAND ----------
 
