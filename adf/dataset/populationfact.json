@@ -1,0 +1,53 @@
+{
+	"name": "populationfact",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "synapseStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "fact",
+				"fileSystem": "uspopulation"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "decennialTime",
+				"type": "UTF8"
+			},
+			{
+				"name": "stateName",
+				"type": "UTF8"
+			},
+			{
+				"name": "countyName",
+				"type": "UTF8"
+			},
+			{
+				"name": "population",
+				"type": "INT_32"
+			},
+			{
+				"name": "race",
+				"type": "UTF8"
+			},
+			{
+				"name": "sex",
+				"type": "UTF8"
+			},
+			{
+				"name": "minAge",
+				"type": "INT_32"
+			},
+			{
+				"name": "maxAge",
+				"type": "INT_32"
+			}
+		]
+	}
+}

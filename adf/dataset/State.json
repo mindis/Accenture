@@ -1,0 +1,25 @@
+{
+	"name": "State",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "synapseStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "dimstate",
+				"fileSystem": "uspopulation"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "StateName",
+				"type": "UTF8"
+			}
+		]
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"name": "racejoin",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "synapseStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "dimRace",
+				"fileSystem": "uspopulation"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "Race",
+				"type": "UTF8"
+			}
+		]
+	}
+}

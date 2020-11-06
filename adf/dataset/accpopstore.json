@@ -1,0 +1,19 @@
+{
+	"name": "accpopstore",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "accoutput",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "uspopulation"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

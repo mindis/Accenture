@@ -1,0 +1,25 @@
+{
+	"name": "sex",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "synapseStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "dimsex",
+				"fileSystem": "uspopulation"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "Sex",
+				"type": "UTF8"
+			}
+		]
+	}
+}

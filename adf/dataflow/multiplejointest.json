@@ -1,0 +1,69 @@
+{
+	"name": "multiplejointest",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "populationfact",
+						"type": "DatasetReference"
+					},
+					"name": "factpopulation"
+				},
+				{
+					"dataset": {
+						"referenceName": "State",
+						"type": "DatasetReference"
+					},
+					"name": "state"
+				},
+				{
+					"dataset": {
+						"referenceName": "countyname",
+						"type": "DatasetReference"
+					},
+					"name": "countyname"
+				},
+				{
+					"dataset": {
+						"referenceName": "racejoin",
+						"type": "DatasetReference"
+					},
+					"name": "Race"
+				},
+				{
+					"dataset": {
+						"referenceName": "sex",
+						"type": "DatasetReference"
+					},
+					"name": "sex"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "accpopstore",
+						"type": "DatasetReference"
+					},
+					"name": "OutputPop"
+				}
+			],
+			"transformations": [
+				{
+					"name": "StateJoin"
+				},
+				{
+					"name": "CountyJoin"
+				},
+				{
+					"name": "RaceJoin"
+				},
+				{
+					"name": "SexJoin"
+				}
+			],
+			"script": "source(output(\n\t\tdecennialTime as string,\n\t\tstateName as string,\n\t\tcountyName as string,\n\t\tpopulation as integer,\n\t\trace as string,\n\t\tsex as string,\n\t\tminAge as integer,\n\t\tmaxAge as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> factpopulation\nsource(output(\n\t\tStateName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> state\nsource(output(\n\t\tCountyName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> countyname\nsource(output(\n\t\tRace as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> Race\nsource(output(\n\t\tSex as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> sex\nfactpopulation, state join(factpopulation@stateName == state@StateName,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> StateJoin\nStateJoin, countyname join(factpopulation@countyName == countyname@CountyName,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> CountyJoin\nCountyJoin, Race join(factpopulation@race == Race@Race,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> RaceJoin\nRaceJoin, sex join(factpopulation@sex == sex@Sex,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> SexJoin\nSexJoin sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet',\n\tmapColumn(\n\t\tdecennialTime,\n\t\tstateName = factpopulation@stateName,\n\t\tcountyName = factpopulation@countyName,\n\t\tpopulation,\n\t\trace = factpopulation@race,\n\t\tsex = factpopulation@sex,\n\t\tminAge,\n\t\tmaxAge,\n\t\tstStateName = state@StateName,\n\t\tctCountyName = countyname@CountyName,\n\t\trRace = Race@Race,\n\t\tsSex = sex@Sex\n\t),\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> OutputPop"
+		}
+	}
+}
