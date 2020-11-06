@@ -90,6 +90,16 @@ Status page:
 - Uptime of Azure Datafactory service is shows in Azure Service Availbility dashboard.
 
 - Data Flow is an area need more details.
+-
+```
+ADFActivityRun 
+| where  OperationName == "dataflow1 - Succeeded"
+```
+
+- Expand Output -> runStatus -> Metrics -> OutputPop
+
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/adfdataflow1.jpg "Data flow")
+
 - Capacity
 - Azure Data Factory Azure Monitor - https://docs.microsoft.com/en-us/azure/data-factory/monitor-using-azure-monitor
 - Azure Data Factory Alerts - https://azure.microsoft.com/en-in/blog/create-alerts-to-proactively-monitor-your-data-factory-pipelines/
