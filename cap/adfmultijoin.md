@@ -41,3 +41,5 @@ Here i am considering a sql select query with 5 joins. i have one fact and 4 dim
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/adfdataflow4.jpg "Service Health")
 
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/adfdataflow5.jpg "Service Health")
+
+- More to come
