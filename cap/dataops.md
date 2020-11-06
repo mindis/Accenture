@@ -100,6 +100,8 @@ ADFActivityRun
 
 ![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/adfdataflow1.jpg "Data flow")
 
+- Data flow metrics - https://docs.microsoft.com/en-us/azure/data-factory/control-flow-execute-data-flow-activity#use-data-flow-activity-results-in-a-subsequent-activity
+
 - Capacity
 - Azure Data Factory Azure Monitor - https://docs.microsoft.com/en-us/azure/data-factory/monitor-using-azure-monitor
 - Azure Data Factory Alerts - https://azure.microsoft.com/en-in/blog/create-alerts-to-proactively-monitor-your-data-factory-pipelines/
