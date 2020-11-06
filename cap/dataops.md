@@ -94,6 +94,26 @@ Status page:
 - Azure Data Factory Azure Monitor - https://docs.microsoft.com/en-us/azure/data-factory/monitor-using-azure-monitor
 - Azure Data Factory Alerts - https://azure.microsoft.com/en-in/blog/create-alerts-to-proactively-monitor-your-data-factory-pipelines/
 
+## Azure Data lake store
+
+- Azure Data lake Store Gen2 is storage engine which is storage enginer and has not way to send diagnotics logs to log analytics
+- Stores logs in $logs folder
+- documentation is available - https://docs.microsoft.com/en-us/azure/storage/common/storage-analytics-logging?tabs=dotnet
+- Use power shell or cli to read the logs
+- Can also use programming language
+
+- Enable logging
+
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/storagelog1.jpg "Service Health")
+
+- View insights in Azure Portal
+
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/storagelog2.jpg "Service Health")
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/storagelog3.jpg "Service Health")
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/storagelog4.jpg "Service Health")
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/storagelog5.jpg "Service Health")
+![alt text](https://github.com/balakreshnan/Accenture/blob/master/images/storagelog6.jpg "Service Health")
+
 
 ## Azure Functions
 
@@ -123,14 +143,14 @@ Status page:
 
 ## Azure Synapse Analytics
 
-- CPU percentage
+- CPU percentage - Availability
 - Data IO percentage
 - Memory Percentage
-- DWU percentage
+- DWU percentage - Capacity
 - Local Temp percentage
 - Queued Queries
 
-- DWU percentage is good one to watch as more DWU usuage performance will degrade.
+- DWU percentage is good one to watch as more DWU usuage performance will degrade (Capacity).
 - Capacity
 
 ## Log Analytics
