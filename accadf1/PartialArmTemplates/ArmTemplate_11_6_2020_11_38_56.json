@@ -1,0 +1,348 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "accadf1"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/MultipleJoinTest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dataflow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "multiplejointest",
+								"type": "DataFlowReference"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/multiplejointest')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/multiplejointest')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "populationfact",
+								"type": "DatasetReference"
+							},
+							"name": "factpopulation"
+						},
+						{
+							"dataset": {
+								"referenceName": "State",
+								"type": "DatasetReference"
+							},
+							"name": "state"
+						},
+						{
+							"dataset": {
+								"referenceName": "countyname",
+								"type": "DatasetReference"
+							},
+							"name": "countyname"
+						},
+						{
+							"dataset": {
+								"referenceName": "racejoin",
+								"type": "DatasetReference"
+							},
+							"name": "Race"
+						},
+						{
+							"dataset": {
+								"referenceName": "sex",
+								"type": "DatasetReference"
+							},
+							"name": "sex"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "accpopstore",
+								"type": "DatasetReference"
+							},
+							"name": "OutputPop"
+						}
+					],
+					"transformations": [
+						{
+							"name": "StateJoin"
+						},
+						{
+							"name": "CountyJoin"
+						},
+						{
+							"name": "RaceJoin"
+						},
+						{
+							"name": "SexJoin"
+						}
+					],
+					"script": "source(output(\n\t\tdecennialTime as string,\n\t\tstateName as string,\n\t\tcountyName as string,\n\t\tpopulation as integer,\n\t\trace as string,\n\t\tsex as string,\n\t\tminAge as integer,\n\t\tmaxAge as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> factpopulation\nsource(output(\n\t\tStateName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> state\nsource(output(\n\t\tCountyName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> countyname\nsource(output(\n\t\tRace as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> Race\nsource(output(\n\t\tSex as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> sex\nfactpopulation, state join(factpopulation@stateName == state@StateName,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> StateJoin\nStateJoin, countyname join(factpopulation@countyName == countyname@CountyName,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> CountyJoin\nCountyJoin, Race join(factpopulation@race == Race@Race,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> RaceJoin\nRaceJoin, sex join(factpopulation@sex == sex@Sex,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> SexJoin\nSexJoin sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet',\n\tmapColumn(\n\t\tdecennialTime,\n\t\tstateName = factpopulation@stateName,\n\t\tcountyName = factpopulation@countyName,\n\t\tpopulation,\n\t\trace = factpopulation@race,\n\t\tsex = factpopulation@sex,\n\t\tminAge,\n\t\tmaxAge,\n\t\tstStateName = state@StateName,\n\t\tctCountyName = countyname@CountyName,\n\t\trRace = Race@Race,\n\t\tsSex = sex@Sex\n\t),\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> OutputPop"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/populationfact')]",
+				"[concat(variables('factoryId'), '/datasets/State')]",
+				"[concat(variables('factoryId'), '/datasets/countyname')]",
+				"[concat(variables('factoryId'), '/datasets/racejoin')]",
+				"[concat(variables('factoryId'), '/datasets/sex')]",
+				"[concat(variables('factoryId'), '/datasets/accpopstore')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/synapseStorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "https://accsynapsestorage.dfs.core.windows.net",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "**********"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/populationfact')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "synapseStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "fact",
+						"fileSystem": "uspopulation"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "decennialTime",
+						"type": "UTF8"
+					},
+					{
+						"name": "stateName",
+						"type": "UTF8"
+					},
+					{
+						"name": "countyName",
+						"type": "UTF8"
+					},
+					{
+						"name": "population",
+						"type": "INT_32"
+					},
+					{
+						"name": "race",
+						"type": "UTF8"
+					},
+					{
+						"name": "sex",
+						"type": "UTF8"
+					},
+					{
+						"name": "minAge",
+						"type": "INT_32"
+					},
+					{
+						"name": "maxAge",
+						"type": "INT_32"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/synapseStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/State')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "synapseStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "dimstate",
+						"fileSystem": "uspopulation"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "StateName",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/synapseStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/countyname')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "synapseStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "dimcountryname",
+						"fileSystem": "uspopulation"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "CountyName",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/synapseStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/racejoin')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "synapseStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "dimRace",
+						"fileSystem": "uspopulation"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "Race",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/synapseStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sex')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "synapseStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "dimsex",
+						"fileSystem": "uspopulation"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "Sex",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/synapseStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/accpopstore')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "accoutput",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "uspopulation"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		}
+	]
+}

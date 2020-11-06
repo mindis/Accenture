@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'waginput1'"
 		},
+		"synapseStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'synapseStorage'"
+		},
 		"accadlsinput_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'accadlsinput'"
@@ -34,6 +38,10 @@
 		"sqlb1input_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sqlb1input'"
+		},
+		"ADX1_properties_typeProperties_endpoint": {
+			"type": "string",
+			"defaultValue": "https://iiotstore.eastus2.kusto.windows.net"
 		},
 		"ADX1_properties_typeProperties_tenant": {
 			"type": "string",
@@ -54,6 +62,10 @@
 		"waginput1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://waginput.dfs.core.windows.net"
+		},
+		"synapseStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://accsynapsestorage.dfs.core.windows.net"
 		},
 		"accadlsinput_properties_typeProperties_url": {
 			"type": "string",
@@ -76,7 +88,7 @@
 				"annotations": [],
 				"type": "AzureDataExplorer",
 				"typeProperties": {
-					"endpoint": "https://iiotstore.eastus2.kusto.windows.net",
+					"endpoint": "[parameters('ADX1_properties_typeProperties_endpoint')]",
 					"tenant": "[parameters('ADX1_properties_typeProperties_tenant')]",
 					"servicePrincipalId": "[parameters('ADX1_properties_typeProperties_servicePrincipalId')]",
 					"servicePrincipalKey": {
@@ -149,6 +161,23 @@
 							"coreCount": 16,
 							"timeToLive": 15
 						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/synapseStorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('synapseStorage_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('synapseStorage_accountKey')]"
 					}
 				}
 			},
@@ -344,6 +373,184 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/populationfact')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "synapseStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "fact",
+						"fileSystem": "uspopulation"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "decennialTime",
+						"type": "UTF8"
+					},
+					{
+						"name": "stateName",
+						"type": "UTF8"
+					},
+					{
+						"name": "countyName",
+						"type": "UTF8"
+					},
+					{
+						"name": "population",
+						"type": "INT_32"
+					},
+					{
+						"name": "race",
+						"type": "UTF8"
+					},
+					{
+						"name": "sex",
+						"type": "UTF8"
+					},
+					{
+						"name": "minAge",
+						"type": "INT_32"
+					},
+					{
+						"name": "maxAge",
+						"type": "INT_32"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/synapseStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/State')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "synapseStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "dimstate",
+						"fileSystem": "uspopulation"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "StateName",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/synapseStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/countyname')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "synapseStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "dimcountryname",
+						"fileSystem": "uspopulation"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "CountyName",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/synapseStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/racejoin')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "synapseStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "dimRace",
+						"fileSystem": "uspopulation"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "Race",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/synapseStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sex')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "synapseStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "dimsex",
+						"fileSystem": "uspopulation"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "Sex",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/synapseStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlTableCovid')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -423,997 +630,6 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileSystem": "opendataset"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Jsonoutput')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accoutput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "iotdatadump"
-					}
-				},
-				"schema": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Parquet1incoming')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accoutput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "parquetincoming"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": [
-					{
-						"name": "asset",
-						"type": "UTF8"
-					},
-					{
-						"name": "asset_tag",
-						"type": "UTF8"
-					},
-					{
-						"name": "assigned",
-						"type": "UTF8"
-					},
-					{
-						"name": "assigned_to",
-						"type": "UTF8"
-					},
-					{
-						"name": "assignment_group",
-						"type": "UTF8"
-					},
-					{
-						"name": "attributes",
-						"type": "UTF8"
-					},
-					{
-						"name": "can_print",
-						"type": "UTF8"
-					},
-					{
-						"name": "category",
-						"type": "UTF8"
-					},
-					{
-						"name": "cd_rom",
-						"type": "UTF8"
-					},
-					{
-						"name": "cd_speed",
-						"type": "UTF8"
-					},
-					{
-						"name": "change_control",
-						"type": "UTF8"
-					},
-					{
-						"name": "chassis_type",
-						"type": "UTF8"
-					},
-					{
-						"name": "checked_in",
-						"type": "UTF8"
-					},
-					{
-						"name": "checked_out",
-						"type": "UTF8"
-					},
-					{
-						"name": "classification",
-						"type": "UTF8"
-					},
-					{
-						"name": "comments",
-						"type": "UTF8"
-					},
-					{
-						"name": "company",
-						"type": "UTF8"
-					},
-					{
-						"name": "correlation_id",
-						"type": "UTF8"
-					},
-					{
-						"name": "cost",
-						"type": "UTF8"
-					},
-					{
-						"name": "cost_cc",
-						"type": "UTF8"
-					},
-					{
-						"name": "cost_center",
-						"type": "UTF8"
-					},
-					{
-						"name": "cpu_core_count",
-						"type": "UTF8"
-					},
-					{
-						"name": "cpu_core_thread",
-						"type": "UTF8"
-					},
-					{
-						"name": "cpu_count",
-						"type": "UTF8"
-					},
-					{
-						"name": "cpu_manufacturer",
-						"type": "UTF8"
-					},
-					{
-						"name": "cpu_name",
-						"type": "UTF8"
-					},
-					{
-						"name": "cpu_speed",
-						"type": "UTF8"
-					},
-					{
-						"name": "cpu_type",
-						"type": "UTF8"
-					},
-					{
-						"name": "default_gateway",
-						"type": "UTF8"
-					},
-					{
-						"name": "delivery_date",
-						"type": "UTF8"
-					},
-					{
-						"name": "department",
-						"type": "UTF8"
-					},
-					{
-						"name": "discovery_source",
-						"type": "UTF8"
-					},
-					{
-						"name": "disk_space",
-						"type": "UTF8"
-					},
-					{
-						"name": "dns_domain",
-						"type": "UTF8"
-					},
-					{
-						"name": "dr_backup",
-						"type": "UTF8"
-					},
-					{
-						"name": "due",
-						"type": "UTF8"
-					},
-					{
-						"name": "due_in",
-						"type": "UTF8"
-					},
-					{
-						"name": "fault_count",
-						"type": "UTF8"
-					},
-					{
-						"name": "firewall_status",
-						"type": "UTF8"
-					},
-					{
-						"name": "first_discovered",
-						"type": "UTF8"
-					},
-					{
-						"name": "floppy",
-						"type": "UTF8"
-					},
-					{
-						"name": "form_factor",
-						"type": "UTF8"
-					},
-					{
-						"name": "fqdn",
-						"type": "UTF8"
-					},
-					{
-						"name": "gl_account",
-						"type": "UTF8"
-					},
-					{
-						"name": "hardware_status",
-						"type": "UTF8"
-					},
-					{
-						"name": "hardware_substatus",
-						"type": "UTF8"
-					},
-					{
-						"name": "host_name",
-						"type": "UTF8"
-					},
-					{
-						"name": "install_date",
-						"type": "UTF8"
-					},
-					{
-						"name": "install_status",
-						"type": "UTF8"
-					},
-					{
-						"name": "invoice_number",
-						"type": "UTF8"
-					},
-					{
-						"name": "ip_address",
-						"type": "UTF8"
-					},
-					{
-						"name": "justification",
-						"type": "UTF8"
-					},
-					{
-						"name": "last_discovered",
-						"type": "UTF8"
-					},
-					{
-						"name": "lease_id",
-						"type": "UTF8"
-					},
-					{
-						"name": "location",
-						"type": "UTF8"
-					},
-					{
-						"name": "mac_address",
-						"type": "UTF8"
-					},
-					{
-						"name": "maintenance_schedule",
-						"type": "UTF8"
-					},
-					{
-						"name": "managed_domain",
-						"type": "UTF8"
-					},
-					{
-						"name": "manufacturer",
-						"type": "UTF8"
-					},
-					{
-						"name": "model_id",
-						"type": "UTF8"
-					},
-					{
-						"name": "model_number",
-						"type": "UTF8"
-					},
-					{
-						"name": "name",
-						"type": "UTF8"
-					},
-					{
-						"name": "object_id",
-						"type": "UTF8"
-					},
-					{
-						"name": "operational_status",
-						"type": "UTF8"
-					},
-					{
-						"name": "order_date",
-						"type": "UTF8"
-					},
-					{
-						"name": "os",
-						"type": "UTF8"
-					},
-					{
-						"name": "os_address_width",
-						"type": "UTF8"
-					},
-					{
-						"name": "os_domain",
-						"type": "UTF8"
-					},
-					{
-						"name": "os_service_pack",
-						"type": "UTF8"
-					},
-					{
-						"name": "os_version",
-						"type": "UTF8"
-					},
-					{
-						"name": "owned_by",
-						"type": "UTF8"
-					},
-					{
-						"name": "po_number",
-						"type": "UTF8"
-					},
-					{
-						"name": "processor_name",
-						"type": "UTF8"
-					},
-					{
-						"name": "purchase_date",
-						"type": "UTF8"
-					},
-					{
-						"name": "ram",
-						"type": "UTF8"
-					},
-					{
-						"name": "schedule",
-						"type": "UTF8"
-					},
-					{
-						"name": "serial_number",
-						"type": "UTF8"
-					},
-					{
-						"name": "short_description",
-						"type": "UTF8"
-					},
-					{
-						"name": "skip_sync",
-						"type": "UTF8"
-					},
-					{
-						"name": "start_date",
-						"type": "UTF8"
-					},
-					{
-						"name": "subcategory",
-						"type": "UTF8"
-					},
-					{
-						"name": "support_group",
-						"type": "UTF8"
-					},
-					{
-						"name": "supported_by",
-						"type": "UTF8"
-					},
-					{
-						"name": "sys_class_name",
-						"type": "UTF8"
-					},
-					{
-						"name": "sys_class_path",
-						"type": "UTF8"
-					},
-					{
-						"name": "sys_created_by",
-						"type": "UTF8"
-					},
-					{
-						"name": "sys_created_on",
-						"type": "UTF8"
-					},
-					{
-						"name": "sys_domain",
-						"type": "UTF8"
-					},
-					{
-						"name": "sys_domain_path",
-						"type": "UTF8"
-					},
-					{
-						"name": "sys_id",
-						"type": "UTF8"
-					},
-					{
-						"name": "sys_mod_count",
-						"type": "UTF8"
-					},
-					{
-						"name": "sys_updated_by",
-						"type": "UTF8"
-					},
-					{
-						"name": "sys_updated_on",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_additional_attributes",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_application_id",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_asset_id",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_asset_owner",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_business_approver_groups",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_business_approvers",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_cab_approver_groups",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_cab_approvers",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_category",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_ci_manager",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_corporate_structure",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_corporatestructure1",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_delivery_date",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_device_type",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_hardware_operating_system",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_hardware_os_version",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_managed_by_group",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_rack",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_refresh_due_date",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_room",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_site_support_team",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_start_tool_last_modified_by",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_start_tool_last_modified_date",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_support_model",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_support_model_management",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_technical_approver_groups",
-						"type": "UTF8"
-					},
-					{
-						"name": "u_technical_approvers",
-						"type": "UTF8"
-					},
-					{
-						"name": "unverified",
-						"type": "UTF8"
-					},
-					{
-						"name": "used_for",
-						"type": "UTF8"
-					},
-					{
-						"name": "vendor",
-						"type": "UTF8"
-					},
-					{
-						"name": "virtual",
-						"type": "UTF8"
-					},
-					{
-						"name": "warranty_expiration",
-						"type": "UTF8"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Parquet1output')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accoutput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "parquetoutput"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/adfinput')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accoutput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "adfinput"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accoutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/adfinputjson')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accadlsinput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "13456-2020.03.23.2-Sample2.json",
-						"fileSystem": "adfinput"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"AirID": {
-							"type": "integer"
-						},
-						"ComponentName": {
-							"type": "string"
-						},
-						"Version": {
-							"type": "string"
-						},
-						"Environment": {
-							"type": "array"
-						},
-						"Endpoints": {
-							"type": "array",
-							"items": {
-								"type": "string"
-							}
-						},
-						"Platform": {
-							"type": "string"
-						},
-						"Dependencies": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"properties": {
-									"name": {
-										"type": "string"
-									},
-									"version": {
-										"type": "string"
-									},
-									"type": {
-										"type": "string"
-									},
-									"sourceType": {
-										"type": "string"
-									},
-									"source": {
-										"type": "string"
-									},
-									"collectionSource": {
-										"type": "string"
-									},
-									"meta": {
-										"type": "object"
-									},
-									"custom": {
-										"type": "object",
-										"properties": {
-											"Name": {
-												"type": "string"
-											},
-											"Endpoints": {
-												"type": "array",
-												"items": {
-													"type": "string"
-												}
-											},
-											"InUse[Yes/No]": {
-												"type": "boolean"
-											}
-										}
-									}
-								}
-							}
-						},
-						"BuilderMeta": {
-							"type": "object",
-							"properties": {
-								"MetadataBuilder": {
-									"type": "object",
-									"properties": {
-										"version": {
-											"type": "string"
-										},
-										"updated": {
-											"type": "string"
-										}
-									}
-								},
-								"DateTime": {
-									"type": "string"
-								},
-								"VSTS": {
-									"type": "object",
-									"properties": {
-										"Build": {
-											"type": "object",
-											"properties": {
-												"BUILD_REPOSITORY_URI": {
-													"type": "string"
-												},
-												"BUILD_SOURCEBRANCHNAME": {
-													"type": "string"
-												},
-												"BUILD_ARTIFACTSTAGINGDIRECTORY": {
-													"type": "string"
-												},
-												"BUILD_BUILDID": {
-													"type": "string"
-												},
-												"BUILD_BUILDNUMBER": {
-													"type": "string"
-												},
-												"BUILD_BUILDURI": {
-													"type": "string"
-												},
-												"BUILD_BINARIESDIRECTORY": {
-													"type": "string"
-												},
-												"BUILD_DEFINITIONNAME": {
-													"type": "string"
-												},
-												"BUILD_DEFINITIONVERSION": {
-													"type": "string"
-												},
-												"BUILD_REASON": {
-													"type": "string"
-												},
-												"BUILD_REPOSITORY_CLEAN": {
-													"type": "string"
-												},
-												"BUILD_REPOSITORY_LOCALPATH": {
-													"type": "string"
-												},
-												"BUILD_REPOSITORY_ID": {
-													"type": "string"
-												},
-												"BUILD_REPOSITORY_NAME": {
-													"type": "string"
-												},
-												"BUILD_REPOSITORY_PROVIDER": {
-													"type": "string"
-												}
-											}
-										},
-										"Agent": {
-											"type": "object",
-											"properties": {
-												"AGENT_BUILDDIRECTORY": {
-													"type": "string"
-												},
-												"AGENT_HOMEDIRECTORY": {
-													"type": "string"
-												},
-												"AGENT_ID": {
-													"type": "string"
-												},
-												"AGENT_JOBNAME": {
-													"type": "string"
-												},
-												"AGENT_JOBSTATUS": {
-													"type": "string"
-												},
-												"AGENT_MACHINENAME": {
-													"type": "string"
-												},
-												"AGENT_NAME": {
-													"type": "string"
-												},
-												"AGENT_OS": {
-													"type": "string"
-												},
-												"AGENT_OSARCHITECTURE": {
-													"type": "string"
-												},
-												"AGENT_TOOLSDIRECTORY": {
-													"type": "string"
-												},
-												"AGENT_WORKFOLDER": {
-													"type": "string"
-												}
-											}
-										},
-										"System": {
-											"type": "object",
-											"properties": {
-												"PIPELINE_WORKSPACE": {
-													"type": "string"
-												},
-												"SYSTEM_COLLECTIONID": {
-													"type": "string"
-												},
-												"SYSTEM_DEFAULTWORKINGDIRECTORY": {
-													"type": "string"
-												},
-												"SYSTEM_DEFINITIONID": {
-													"type": "string"
-												},
-												"SYSTEM_HOSTTYPE": {
-													"type": "string"
-												},
-												"SYSTEM_PULLREQUEST_ISFORK": {
-													"type": "string"
-												},
-												"SYSTEM_PULLREQUEST_PULLREQUESTID": {
-													"type": "null"
-												},
-												"SYSTEM_PULLREQUEST_PULLREQUESTNUMBER": {
-													"type": "null"
-												},
-												"SYSTEM_PULLREQUEST_SOURCEBRANCH": {
-													"type": "null"
-												},
-												"SYSTEM_PULLREQUEST_SOURCEREPOSITORYURI": {
-													"type": "null"
-												},
-												"SYSTEM_PULLREQUEST_TARGETBRANCH": {
-													"type": "null"
-												},
-												"SYSTEM_TASKDEFINITIONSURI": {
-													"type": "string"
-												},
-												"SYSTEM_TASKDISPLAYNAME": {
-													"type": "string"
-												},
-												"SYSTEM_TASKINSTANCEID": {
-													"type": "string"
-												},
-												"SYSTEM_TASKINSTANCENAME": {
-													"type": "string"
-												},
-												"SYSTEM_TEAMFOUNDATIONCOLLECTIONURI": {
-													"type": "string"
-												},
-												"SYSTEM_TEAMPROJECT": {
-													"type": "string"
-												},
-												"SYSTEM_TEAMPROJECTID": {
-													"type": "string"
-												},
-												"TASK_DISPLAYNAME": {
-													"type": "string"
-												}
-											}
-										}
-									}
-								}
-							}
-						},
-						"Eso": {
-							"type": "array"
-						},
-						"Services": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"properties": {
-									"Name": {
-										"type": "string"
-									},
-									"Version": {
-										"type": "string"
-									},
-									"InUse": {
-										"type": "boolean"
-									},
-									"collectionSource": {
-										"type": "string"
-									}
-								}
-							}
-						},
-						"Templates": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"properties": {
-									"Name": {
-										"type": "string"
-									},
-									"Version": {
-										"type": "string"
-									},
-									"InUse": {
-										"type": "boolean"
-									},
-									"collectionSource": {
-										"type": "string"
-									}
-								}
-							}
-						},
-						"MRDR": {
-							"type": "array"
-						},
-						"UnsupportedFiles": {
-							"type": "array",
-							"items": {
-								"type": "string"
-							}
-						},
-						"Errors": {
-							"type": "object",
-							"properties": {
-								"CRITICAL": {
-									"type": "array",
-									"items": {
-										"type": "object",
-										"properties": {
-											"Source": {
-												"type": "string"
-											},
-											"Time": {
-												"type": "string"
-											},
-											"Message": {
-												"type": "string"
-											}
-										}
-									}
-								},
-								"ERROR": {
-									"type": "array"
-								},
-								"WARNING": {
-									"type": "array",
-									"items": {
-										"type": "object",
-										"properties": {
-											"Source": {
-												"type": "string"
-											},
-											"Time": {
-												"type": "string"
-											},
-											"Message": {
-												"type": "string"
-											}
-										}
-									}
-								}
-							}
-						},
-						"FilteredData": {
-							"type": "array",
-							"items": {
-								"type": "string"
-							}
-						},
-						"DataSource": {
-							"type": "array",
-							"items": {
-								"type": "string"
-							}
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/accadlsinput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/adfoutput')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "accoutput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "adfoutput"
 					}
 				}
 			},

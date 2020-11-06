@@ -26,6 +26,12 @@
 		"waginput1_accountKey": {
 			"value": ""
 		},
+		"synapseStorage_accountKey": {
+			"value": ""
+		},
+		"ADX1_properties_typeProperties_endpoint": {
+			"value": "https://iiotstore.eastus2.kusto.windows.net"
+		},
 		"ADX1_properties_typeProperties_tenant": {
 			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
 		},
@@ -46,6 +52,9 @@
 		},
 		"waginput1_properties_typeProperties_url": {
 			"value": "https://waginput.dfs.core.windows.net"
+		},
+		"synapseStorage_properties_typeProperties_url": {
+			"value": "https://accsynapsestorage.dfs.core.windows.net"
 		}
 	}
 }
