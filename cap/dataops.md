@@ -211,6 +211,31 @@ ADFActivityRun
 | limit 100
 ```
 
+## Power BI
+
+### User Activity can be accessed through the Audit Log or Activity Log
+-  Audit log (requires global admin permission) - available through the [Office 365 Securirt & Compliance Center](https://login.microsoftonline.com/common/oauth2/authorize?client_id=80ccca67-54bd-44ab-8625-4b79c4dc7775&response_mode=form_post&response_type=code+id_token&scope=openid+profile&state=OpenIdConnect.AuthenticationProperties%3dWRK9KZQqQFYyvDJMx2gsCDvNRAXsW_yPWi6mVSfpkFHUoKnolNp2G_zAs_3qT8tpiIEvZVEdD0KKLgP9PO1-CKla2nlIeBSEViJeMsDHGpstT9Nh5JuAM3v-kXs3ePi2D_tBoctidZfql5oVsud9iQ&nonce=637402999850476896.YjdkZWMzNDUtNjgwNS00NDZiLTk2YTktOTJlZjAyZDdjYmQ5YzZjMWY0YmYtZGUwZi00ZmMzLTk2ODItZmQ4ZDYwZWY3MzM2&redirect_uri=https%3a%2f%2fsip.protection.office.com%2f&sso_nonce=AQABAAAAAAB2UyzwtQEKR7-rWbgdcBZI15x292ADpHdlvN0n9XD4R-rlvhfX4kYgbGSwB1x7famWSCY260PTbf-mxRtnFc_zjTx0MZGLV-_mKp9iCKx6OCAA&client-request-id=30cc94a0-8550-490c-ac91-4a26a579f591&mscrid=30cc94a0-8550-490c-ac91-4a26a579f591#/unifiedauditlog)
+- Power BI Activity Log (requires Power BI service admin or global admin permission) - Power BI REST APIs can be used to generate Activity Events similar to the request below. More information can be found [here](https://docs.microsoft.com/en-us/power-bi/admin/service-admin-auditing#activity-log-requirements)  
+```
+https://api.powerbi.com/v1.0/myorg/admin/activityevents?startDateTime='2019-08-31T00:00:00'&endDateTime='2019-08-31T23:59:59
+```
+- Sample Metrics available in the Audit and Acitivty Logs include:
+  - Created Power BI report
+  - Created Power BI dataset
+  - Requested Power BI dataset refresh
+  - Full list can be found [here](https://docs.microsoft.com/en-us/power-bi/admin/service-admin-auditing#operations-available-in-the-audit-and-activity-logs)
+
+### Monitor Premium Capacity through Admin Portal & Capacity Metrics App
+- As a Capacity Admin, you can monitor capacities through the admin portal - [information here](https://docs.microsoft.com/en-us/power-bi/admin/service-admin-premium-monitor-portal)
+-[Power BI Premium Capacity Metrics App](https://appsource.microsoft.com/en-us/product/power-bi/pbi_pcmm.capacity-metrics-dxt?tab=Overview) is also available to capacity admins and includes the following information:
+  - Overview - App version, number of capacities and workspaces
+  - System Summary - Memory and CPU metrics
+  - Dataset Summary - Number of datasets, DQ/LC, refresh, and query metrics
+  - Dataflow Summary - Number of dataflows, and dataset metrics
+  - Paginated Report Summary - Refresh and view metrics
+  
+![alt text](https://docs.microsoft.com/en-us/power-bi/admin/media/service-admin-premium-monitor-capacity/app-dashboard.png)
+
 ## Build Run Ops Team
 
 - Create a Team of professional
