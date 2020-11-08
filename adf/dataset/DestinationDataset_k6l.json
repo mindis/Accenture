@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_k6l",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "accoutput",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "uspopulationinput"
+			}
+		}
+	}
+}
