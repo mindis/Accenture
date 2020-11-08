@@ -23,10 +23,10 @@
 		"sqlb1input_connectionString": {
 			"value": ""
 		},
-		"waginput1_accountKey": {
+		"synapseStorage_accountKey": {
 			"value": ""
 		},
-		"synapseStorage_accountKey": {
+		"waginput1_accountKey": {
 			"value": ""
 		},
 		"ADX1_properties_typeProperties_endpoint": {
@@ -50,11 +50,11 @@
 		"iotcentralblob1_properties_typeProperties_url": {
 			"value": "https://iotcentralstore.dfs.core.windows.net"
 		},
-		"waginput1_properties_typeProperties_url": {
-			"value": "https://waginput.dfs.core.windows.net"
-		},
 		"synapseStorage_properties_typeProperties_url": {
 			"value": "https://accsynapsestorage.dfs.core.windows.net"
+		},
+		"waginput1_properties_typeProperties_url": {
+			"value": "https://waginput.dfs.core.windows.net"
 		}
 	}
 }
